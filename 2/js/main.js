@@ -1,19 +1,29 @@
 // Возвращает случайное целое число из переданного диапазона включительно.
-function getRandomNumber (min, max) {
+function getRandomNumber(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
+
   if (min <= max && min >= 0) {
-    return Math.round(Math.random() * (max - min) + min);
+    return Math.floor( Math.random() * (max - min +1) + min );
   }
 }
 
 getRandomNumber();
 
-//  Возвращает случайное число с плавающей точкой из переданного диапазона включительно.
-function getRandomFloat (min, max, fractionDigits) {
-  if (min <= max && min >= 0) {
-    const fractionMultiplier = Math.pow(10, fractionDigits);
-    return Math.round((Math.random() * (max- min) + min) * fractionMultiplier) / fractionMultiplier;
+/* Возвращает случайное число с плавающей точкой из переданного диапазона включительно.
+Преобразует значения переданного диапазона в корректный формат (0.123... => 0.1) */
+function getRandomFloat(min, max, fractionDigits) {
+  fractionDigits = Math.floor(fractionDigits);
+  const fractionMultiplier = Math.pow(10, fractionDigits);
+  min = Math.floor(min * 10) / 10;
+  max = Math.floor(max * 10) / 10;
+
+  if (
+    min <= max &&
+    min >= 0 &&
+    fractionDigits >= 0
+  ) {
+    return Math.floor( (Math.random() * (max - min + 0.1) + min) * fractionMultiplier  ) / fractionMultiplier;
   }
 }
 
