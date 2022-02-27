@@ -73,11 +73,10 @@ const getOffer = () => ({
 const generateAds = () => {
   const ads = [];
   for (let i = 0; i < SIMILAR_AD_COUNT; i++) {
-    const location = getLocation();
     ads.push({
       autor: getAutor(i),
       offer: getOffer(),
-      location,
+      location: getLocation()
     });
   }
   return ads;
