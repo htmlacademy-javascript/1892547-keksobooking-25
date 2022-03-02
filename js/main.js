@@ -1,3 +1,3 @@
-import {generateAds} from './data.js';
+import {generateAds} from './generate-ads.js';
 
 generateAds(10);
