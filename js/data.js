@@ -50,4 +50,5 @@ const createAd = (i) => {
 
 const generateAds = (maxAds) =>  Array.from({length: maxAds}, (_item, index) => createAd(index + 1));
 
-generateAds();
+export {generateAds};
+
