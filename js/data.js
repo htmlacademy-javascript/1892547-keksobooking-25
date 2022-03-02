@@ -1,4 +1,4 @@
-import { getRandomNumber, getRandomFloat, getRandomArrayElement } from './util';
+import { getRandomNumber, getRandomFloat, getRandomArrayElement } from './util.js';
 
 const MIN_PRICE = 1;
 const MAX_PRICE = 30000;
