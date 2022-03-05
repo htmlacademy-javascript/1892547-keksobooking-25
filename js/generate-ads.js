@@ -1,13 +1,30 @@
 import {getRandomNumber, getRandomFloat, getRandomArrayElement} from './util.js';
-import {getData} from './data.js';
 
-const data = getData();
+const MIN_PRICE= 1;
+const MAX_PRICE= 30000;
+const MIN_ROOMS= 1;
+const MAX_ROOMS= 8;
+const MIN_GUESTS= 1;
+const MAX_GUESTS= 10;
+const MIN_LAT= 35.65000;
+const MAX_LAT= 35.70000;
+const MIN_LNG= 139.70000;
+const MAX_LNG= 139.80000;
+const FLOAT= 5;
+const TYPES= ['palace', 'flat', 'house', 'bungalow', 'hotel'];
+const TIME= ['12:00', '13:00', '14:00'];
+const FEATURES= ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+const PHOTOS= [
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
+];
 
 const createAd = (i) => {
   const id = `${i}`.padStart(2, '0');
   const location = {
-    lat: getRandomFloat(data.MIN_LAT, data.MAX_LAT, data.FLOAT),
-    lng: getRandomFloat(data.MIN_LNG, data.MAX_LNG, data.FLOAT),
+    lat: getRandomFloat(MIN_LAT, MAX_LAT, FLOAT),
+    lng: getRandomFloat(MIN_LNG, MAX_LNG, FLOAT),
   };
 
   return {
@@ -18,20 +35,17 @@ const createAd = (i) => {
     offer: {
       title: 'Заголовок предложения',
       address: `${location.lat}, ${location.lng}`,
-      price: getRandomNumber(data.MIN_PRICE, data.MAX_PRICE),
-      type: getRandomArrayElement(data.TYPES),
-      rooms: getRandomNumber(data.MIN_ROOMS, data.MAX_ROOMS),
-      guests: getRandomNumber(data.MIN_GUESTS, data.MAX_GUESTS),
-      checkin: getRandomArrayElement(data.TIME),
-      checkout: getRandomArrayElement(data.TIME),
-      features: data.FEATURES.slice(0, getRandomNumber(1, data.FEATURES.length)),
+      price: getRandomNumber(MIN_PRICE, MAX_PRICE),
+      type: getRandomArrayElement(TYPES),
+      rooms: getRandomNumber(MIN_ROOMS, MAX_ROOMS),
+      guests: getRandomNumber(MIN_GUESTS, MAX_GUESTS),
+      checkin: getRandomArrayElement(TIME),
+      checkout: getRandomArrayElement(TIME),
+      features: FEATURES.slice(0, getRandomNumber(1, FEATURES.length)),
       description: 'Описание помещения',
-      photos: data.PHOTOS.slice(0, getRandomNumber(1, data.PHOTOS.length)),
+      photos: PHOTOS.slice(0, getRandomNumber(1, PHOTOS.length)),
     }
   };
 };
 
-const generateAds = (maxAds) =>  Array.from({length: maxAds}, (_item, index) => createAd(index + 1));
-
-export {generateAds};
-
+export const generateAds = (maxAds) =>  Array.from({length: maxAds}, (_item, index) => createAd(index + 1));
