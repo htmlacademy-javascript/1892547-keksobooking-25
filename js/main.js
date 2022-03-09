@@ -1,3 +1,2 @@
-import {generateAds} from './generate-ads.js';
-
-generateAds(10);
+import './generate-ads.js';
+import './similar-offers.js';
