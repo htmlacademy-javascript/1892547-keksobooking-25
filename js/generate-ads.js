@@ -19,6 +19,20 @@ const PHOTOS= [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
 ];
+const TITLE = [
+  'Историческая вилла с садом рядом с Пизой',
+  'Уютная студия с видом на парк',
+  'Гостевой дом в коттэджном посёлке премиум класса',
+  'Великолепная квартира в центре города',
+  'Шикарное шале на берегу тихого озера'
+];
+const DESCRIPTION = [
+  'Квартира находится в самом центре Тирасполя, в тихом уютном месте.',
+  'Квартира сделана в стиле лофт .В спальне расположена две односпальный кровати который можно соединить и спать семейное паре 2 персоны , в гостиной диван на 1 персону',
+  'Квартира расположена вблизи железнодорожного вокзала, рядом парк, продуктовый магазин, известный вино-коньячный завод KVINT, фирменный магазин осетрового комплекса «Акватир», который производит черную икру. Квартира маленькая, но имеется всё необходимое для комфортного размещения, всегда чисто!',
+  'Сдается новая квартира в самом центре Кишинева!В непосредственной близости расположен центральный парк, торговые центры, супермаркеты, банки, рестораны, аптеки',
+  'Я не знаю что еще тут написать, все равно тут будут потом реальные данные, так что пусть будет пока так.:)'
+];
 
 const createAd = (i) => {
   const id = `${i}`.padStart(2, '0');
@@ -33,7 +47,7 @@ const createAd = (i) => {
     },
     location,
     offer: {
-      title: 'Заголовок предложения',
+      title: TITLE[getRandomNumber(0, TITLE.length -1)],
       address: `${location.lat}, ${location.lng}`,
       price: getRandomNumber(MIN_PRICE, MAX_PRICE),
       type: getRandomArrayElement(TYPES),
@@ -41,9 +55,9 @@ const createAd = (i) => {
       guests: getRandomNumber(MIN_GUESTS, MAX_GUESTS),
       checkin: getRandomArrayElement(TIME),
       checkout: getRandomArrayElement(TIME),
-      features: FEATURES.slice(0, getRandomNumber(1, FEATURES.length)),
-      description: 'Описание помещения',
-      photos: PHOTOS.slice(0, getRandomNumber(1, PHOTOS.length)),
+      features: FEATURES.slice(0, getRandomNumber(0, FEATURES.length)),
+      description: DESCRIPTION[getRandomNumber(0, DESCRIPTION.length -1)],
+      photos: PHOTOS.slice(0, getRandomNumber(0, PHOTOS.length)),
     }
   };
 };

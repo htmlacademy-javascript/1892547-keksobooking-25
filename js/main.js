@@ -1,2 +1,1 @@
-import './generate-ads.js';
-import './similar-offers.js';
+import './create-card.js';
