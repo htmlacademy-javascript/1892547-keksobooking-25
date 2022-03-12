@@ -18,4 +18,3 @@ export const getRandomFloat = (a, b, digits = 1) => {
 
 // Вовзращает случайный элемент массива
 export const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
-
