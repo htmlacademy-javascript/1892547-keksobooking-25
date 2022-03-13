@@ -19,14 +19,14 @@ const PHOTOS= [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
 ];
-const TITLE = [
+const TITLES = [
   'Историческая вилла с садом рядом с Пизой',
   'Уютная студия с видом на парк',
   'Гостевой дом в коттэджном посёлке премиум класса',
   'Великолепная квартира в центре города',
   'Шикарное шале на берегу тихого озера'
 ];
-const DESCRIPTION = [
+const DESCRIPTIONS = [
   'Квартира находится в самом центре Тирасполя, в тихом уютном месте.',
   'Квартира сделана в стиле лофт .В спальне расположена две односпальный кровати который можно соединить и спать семейное паре 2 персоны , в гостиной диван на 1 персону',
   'Квартира расположена вблизи железнодорожного вокзала, рядом парк, продуктовый магазин, известный вино-коньячный завод KVINT, фирменный магазин осетрового комплекса «Акватир», который производит черную икру. Квартира маленькая, но имеется всё необходимое для комфортного размещения, всегда чисто!',
@@ -47,7 +47,7 @@ const createAd = (i) => {
     },
     location,
     offer: {
-      title: TITLE[getRandomNumber(0, TITLE.length -1)],
+      title: TITLES[getRandomNumber(0, TITLES.length -1)],
       address: `${location.lat}, ${location.lng}`,
       price: getRandomNumber(MIN_PRICE, MAX_PRICE),
       type: getRandomArrayElement(TYPES),
@@ -56,7 +56,7 @@ const createAd = (i) => {
       checkin: getRandomArrayElement(TIME),
       checkout: getRandomArrayElement(TIME),
       features: FEATURES.slice(0, getRandomNumber(0, FEATURES.length)),
-      description: DESCRIPTION[getRandomNumber(0, DESCRIPTION.length -1)],
+      description: DESCRIPTIONS[getRandomNumber(0, DESCRIPTIONS.length -1)],
       photos: PHOTOS.slice(0, getRandomNumber(0, PHOTOS.length)),
     }
   };
