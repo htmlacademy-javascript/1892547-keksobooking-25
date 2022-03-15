@@ -1,4 +1,9 @@
 const form = document.querySelector('.ad-form');
+const fieldsets = form.querySelectorAll('.ad-form__element');
+const mapFilter = document.querySelector('.map__filters');
+const mapFilters = mapFilter.querySelectorAll('.map__filter');
+const mapFeatures = mapFilter.querySelector('.map__features');
+const slider = form.querySelector('.ad-form__slider');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
 const roomsOption = {
@@ -39,3 +44,40 @@ form.addEventListener('submit', (evt) => {
   evt.preventDefault();
   pristine.validate();
 });
+
+const getInactive = () => {
+  form.classList.add('ad-form--disabled');
+
+  fieldsets.forEach((element) => {
+    element.disabled = true;
+  });
+
+  slider.disabled = true;
+  mapFilter.classList.add('map__filters--disabled');
+
+  mapFilters.forEach((element) => {
+    element.disabled = true;
+  });
+
+  mapFeatures.disabled = true;
+};
+
+const getActive = () => {
+  form.classList.remove('ad-form--disabled');
+
+  fieldsets.forEach((element) => {
+    element.disabled = false;
+  });
+
+  slider.disabled = false;
+  mapFilter.classList.remove('map__filters--disabled');
+
+  mapFilters.forEach((element) => {
+    element.disabled = false;
+  });
+
+  mapFeatures.disabled = false;
+};
+
+getInactive();
+getActive();
