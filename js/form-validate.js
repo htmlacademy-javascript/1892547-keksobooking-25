@@ -29,11 +29,13 @@ const getRoomsErrorMessage = () => {
 
     case '100':
       return 'Не для гостей';
-  }
-};
+  }};
 
-pristine.addValidator(roomsField, validateRooms, getRoomsErrorMessage, 1, false);
-pristine.addValidator(capacityField, validateRooms);
+roomsField.addEventListener('change', () => {
+  pristine.validate(capacityField);
+});
+
+pristine.addValidator(capacityField, validateRooms, getRoomsErrorMessage);
 
 form.addEventListener('submit', (evt) => {
   evt.preventDefault();
