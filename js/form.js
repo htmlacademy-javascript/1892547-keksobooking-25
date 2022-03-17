@@ -57,7 +57,7 @@ pristine.addValidator(capacityField, validateRooms, getRoomsErrorMessage);
 // Валидация типа жилья и цен
 const validatePrice = (value) => value >= minPrice[typeField.value] && value <= MAX_PRICE;
 const getPriceErrorMessage = () => {
-  if (priceField.value > 100000) {
+  if (priceField.value > MAX_PRICE) {
     return `Максимальная цена: ${MAX_PRICE}`;
   }
   return `Минимальная цена: ${minPrice[typeField.value]}`;
