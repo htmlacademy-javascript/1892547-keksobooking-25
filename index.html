@@ -85,7 +85,7 @@
             <p class="ad-form-header__info">Заполните все обязательные поля, назначьте цену, загрузите аватар и фото жилья. Придумайте интересное описание. Оно сделает объявление более живым и привлекательным. Получившееся объявление должно давать гостям полное представление о вашем жилье.</p>
           </div>
         </fieldset>
-        <fieldset class="ad-form__element ad-form__element--wide">
+        <fieldset class="ad-form__element ad-form__element--wide form-item">
           <label class="ad-form__label" for="title">Заголовок объявления</label>
           <input id="title" name="title" type="text" placeholder="Милая, уютная квартирка в центре Токио" required minlength="30" maxlength="100"
           data-pristine-required-message= "Обязательное поле"
@@ -97,7 +97,7 @@
           <label class="ad-form__label" for="address">Адрес (координаты)</label>
           <input id="address" name="address" type="text">
         </fieldset>
-        <fieldset class="ad-form__element">
+        <fieldset class="ad-form__element form-item">
           <label class="ad-form__label" for="type">Тип жилья</label>
           <select id="type" name="type">
             <option value="bungalow">Бунгало</option>
@@ -107,27 +107,26 @@
             <option value="palace">Дворец</option>
           </select>
         </fieldset>
-        <fieldset class="ad-form__element">
+        <fieldset class="ad-form__element form-item">
           <label class="ad-form__label" for="price">Цена за ночь, руб.</label>
-          <input id="price" name="price" type="number" placeholder="5000" max="100000" required
-          data-pristine-required-message= "Обязательное поле"
-          data-pristine-max-message="Максимальное значение — 100 000">
+          <input id="price" name="price" type="number" placeholder="5000" required
+          data-pristine-required-message= "Обязательное поле">
           <div class="ad-form__slider"></div>
         </fieldset>
         <fieldset class="ad-form__element ad-form__element--time">
           <label class="ad-form__label" for="timein">Время заезда и выезда</label>
           <select id="timein" name="timein">
-            <option value="12:00" selected>После 12</option>
+            <option value="12:00">После 12</option>
             <option value="13:00">После 13</option>
             <option value="14:00">После 14</option>
           </select>
           <select id="timeout" name="timeout" title="Time to go out">
-            <option value="12:00" selected>Выезд до 12</option>
+            <option value="12:00">Выезд до 12</option>
             <option value="13:00">Выезд до 13</option>
             <option value="14:00">Выезд до 14</option>
           </select>
         </fieldset>
-        <fieldset class="ad-form__element">
+        <fieldset class="ad-form__element form-item">
           <label class="ad-form__label" for="room_number">Количество комнат</label>
           <select id="room_number" name="rooms">
             <option value="1" selected>1 комната</option>
@@ -136,7 +135,7 @@
             <option value="100">100 комнат</option>
           </select>
         </fieldset>
-        <fieldset class="ad-form__element">
+        <fieldset class="ad-form__element form-item">
           <label class="ad-form__label" for="capacity">Количество мест</label>
           <select id="capacity" name="capacity">
             <option value="3">для 3 гостей</option>
