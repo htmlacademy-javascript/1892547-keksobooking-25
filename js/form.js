@@ -1,4 +1,5 @@
 const form = document.querySelector('.ad-form');
+const mapFilter = document.querySelector('.map__filters');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
 const roomsOption = {
@@ -41,3 +42,16 @@ form.addEventListener('submit', (evt) => {
   evt.preventDefault();
   pristine.validate();
 });
+
+const inactivatePage = () => {
+  form.classList.add('ad-form--disabled');
+  mapFilter.classList.add('map__filters--disabled');
+};
+
+const activatePage = () => {
+  form.classList.remove('ad-form--disabled');
+  mapFilter.classList.remove('map__filters--disabled');
+};
+
+inactivatePage();
+activatePage();
