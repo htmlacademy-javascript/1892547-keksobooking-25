@@ -8,7 +8,6 @@ const TRANSLATIONS = {
   hotel: 'Отель'
 };
 const offerCardTemplate = document.querySelector('#card').content;
-const similarOffersFragmet = document.createDocumentFragment();
 const mapCanvas = document.querySelector('#map-canvas');
 const cards = generateAds(10);
 
@@ -20,7 +19,6 @@ const createFeatures = (features) => {
     li.className = `popup__feature popup__feature--${feature}`;
     container.append(li);
   }
-
   return container;
 
 };
@@ -37,7 +35,6 @@ const createPhotos = (photos) => {
     image.alt= 'Фотография жилья';
     photosFragment.append(image);
   }
-
   return photosFragment;
 
 };
@@ -45,17 +42,17 @@ const createPhotos = (photos) => {
 export const createCard = (data) => {
   const offerCard = offerCardTemplate.cloneNode(true);
   const popupTitle = offerCard.querySelector('.popup__title');
-  popupTitle.innerHTML = data.offer.title;
+  popupTitle.textContent = data.offer.title;
   const popupAdress = offerCard.querySelector('.popup__text--address');
-  popupAdress.innerHTML = data.offer.address;
+  popupAdress.textContent = data.offer.address;
   const popupPrice = offerCard.querySelector('.popup__text--price');
-  popupPrice.innerHTML = `${data.offer.price} ₽/ночь`;
+  popupPrice.textContent = `${data.offer.price} ₽/ночь`;
   const popupType = offerCard.querySelector('.popup__type');
-  popupType.innerHTML = TRANSLATIONS[data.offer.type];
+  popupType.textContent = TRANSLATIONS[data.offer.type];
   const popupCapacity = offerCard.querySelector('.popup__text--capacity');
-  popupCapacity.innerHTML = `${data.offer.rooms} комнаты для ${data.offer.guests} гостей`;
+  popupCapacity.textContent = `${data.offer.rooms} комнаты для ${data.offer.guests} гостей`;
   const popupTime = offerCard.querySelector('.popup__text--time');
-  popupTime.innerHTML =`Заезд после ${data.offer.checkin}, выезд до ${data.offer.checkout}`;
+  popupTime.textContent =`Заезд после ${data.offer.checkin}, выезд до ${data.offer.checkout}`;
   const popupFeatures = offerCard.querySelector('.popup__features');
 
   if (!data.offer.features) {
@@ -69,7 +66,7 @@ export const createCard = (data) => {
   if (!data.offer.description) {
     popupDescription.remove();
   } else {
-    popupDescription.innerHTML = data.offer.description;
+    popupDescription.textContent = data.offer.description;
   }
 
   const popupPhotos = offerCard.querySelector('.popup__photos');
@@ -82,9 +79,8 @@ export const createCard = (data) => {
 
   const popupAvatar = offerCard.querySelector('.popup__avatar');
   popupAvatar.src = data.autor.avatar;
-  similarOffersFragmet.appendChild(offerCard);
 
-  return similarOffersFragmet;
+  return offerCard;
 };
 
 const card = createCard(cards[0]);
