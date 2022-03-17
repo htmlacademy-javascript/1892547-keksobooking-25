@@ -2,7 +2,7 @@ const form = document.querySelector('.ad-form');
 const mapFilter = document.querySelector('.map__filters');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
-const roomsOption = {
+const roomOptions = {
   '1': ['1'],
   '2': ['1', '2'],
   '3': ['1', '2', '3'],
@@ -15,7 +15,7 @@ const pristine = new Pristine(form, {
   errorTextClass: 'ad-form__error'
 });
 
-const validateRooms = () => roomsOption[roomsField.value].includes(capacityField.value);
+const validateRooms = () => roomOptions[roomsField.value].includes(capacityField.value);
 
 const getRoomsErrorMessage = () => {
   switch (roomsField.value) {
@@ -43,7 +43,7 @@ form.addEventListener('submit', (evt) => {
   pristine.validate();
 });
 
-const inactivatePage = () => {
+const deactivatePage = () => {
   form.classList.add('ad-form--disabled');
   mapFilter.classList.add('map__filters--disabled');
 };
@@ -53,5 +53,5 @@ const activatePage = () => {
   mapFilter.classList.remove('map__filters--disabled');
 };
 
-inactivatePage();
+deactivatePage();
 activatePage();
