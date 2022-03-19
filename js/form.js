@@ -56,12 +56,9 @@ pristine.addValidator(capacityField, validateRooms, getRoomsErrorMessage);
 
 // Валидация типа жилья и цен
 const validatePrice = (value) => value >= minPrice[typeField.value] && value <= MAX_PRICE;
-const getPriceErrorMessage = () => {
-  if (priceField.value > MAX_PRICE) {
-    return `Максимальная цена: ${MAX_PRICE}`;
-  }
-  return `Минимальная цена: ${minPrice[typeField.value]}`;
-};
+const getPriceErrorMessage = () => priceField.value > MAX_PRICE ?
+  `Максимальная цена: ${MAX_PRICE}` :
+  `Минимальная цена: ${minPrice[typeField.value]}`;
 
 pristine.addValidator(priceField, validatePrice, getPriceErrorMessage);
 
@@ -81,23 +78,23 @@ typeField.addEventListener('change', () => {
 });
 
 // Валидация времени заезда/выезда
-const synchronizeValues  = (first, second) => {
+const timeSync  = (first, second) => {
   second.value = first.value;
 };
 
 timeIn.addEventListener('change', () => {
-  synchronizeValues (timeIn, timeOut);
+  timeSync (timeIn, timeOut);
 });
 
 timeOut.addEventListener('change', () => {
-  synchronizeValues (timeOut, timeIn);
+  timeSync (timeOut, timeIn);
 });
 
 // Валидация отправки формы
 form.addEventListener('submit', (evt) => {
-  if (!pristine.validate()) {
-    evt.preventDefault();
-  }});
+  evt.preventDefault();
+  pristine.validate();
+});
 
 // Функции перевода страницы в активное и неактивное состояние
 export const deactivatePage = () => {
