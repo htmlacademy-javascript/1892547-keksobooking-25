@@ -42,7 +42,7 @@ const createAd = (i) => {
   };
 
   return {
-    autor: {
+    author: {
       avatar: `img/avatars/user${id}.png`
     },
     location,

@@ -1,6 +1,5 @@
 const MAX_PRICE = 100000;
-const form = document.querySelector('.ad-form');
-const mapFilter = document.querySelector('.map__filters');
+export const form = document.querySelector('.ad-form');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
 const typeField = form.querySelector('#type');
@@ -95,14 +94,3 @@ form.addEventListener('submit', (evt) => {
   evt.preventDefault();
   pristine.validate();
 });
-
-// Функции перевода страницы в активное и неактивное состояние
-export const deactivatePage = () => {
-  form.classList.add('ad-form--disabled');
-  mapFilter.classList.add('map__filters--disabled');
-};
-
-export const activatePage = () => {
-  form.classList.remove('ad-form--disabled');
-  mapFilter.classList.remove('map__filters--disabled');
-};

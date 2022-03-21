@@ -1,4 +1,4 @@
-import { generateAds } from './generate-ads.js';
+import {generateAds}  from './generate-ads.js';
 
 const TRANSLATIONS = {
   flat: 'Квартира',
@@ -7,9 +7,10 @@ const TRANSLATIONS = {
   palace: 'Дворец',
   hotel: 'Отель'
 };
-const offerCardTemplate = document.querySelector('#card').content;
-const mapCanvas = document.querySelector('#map-canvas');
-const cards = generateAds(10);
+const offerCardTemplate = document.querySelector('#card')
+  .content
+  .querySelector('.popup');
+export const cards = generateAds(10);
 
 const createFeatures = (features) => {
   const container = document.createDocumentFragment();
@@ -39,50 +40,46 @@ const createPhotos = (photos) => {
 
 };
 
-export const createCard = (data) => {
+export const createCard = ({offer, author}) => {
   const offerCard = offerCardTemplate.cloneNode(true);
   const popupTitle = offerCard.querySelector('.popup__title');
-  popupTitle.textContent = data.offer.title;
+  popupTitle.textContent = offer.title;
   const popupAdress = offerCard.querySelector('.popup__text--address');
-  popupAdress.textContent = data.offer.address;
+  popupAdress.textContent = offer.address;
   const popupPrice = offerCard.querySelector('.popup__text--price');
-  popupPrice.textContent = `${data.offer.price} ₽/ночь`;
+  popupPrice.textContent = `${offer.price} ₽/ночь`;
   const popupType = offerCard.querySelector('.popup__type');
-  popupType.textContent = TRANSLATIONS[data.offer.type];
+  popupType.textContent = TRANSLATIONS[offer.type];
   const popupCapacity = offerCard.querySelector('.popup__text--capacity');
-  popupCapacity.textContent = `${data.offer.rooms} комнаты для ${data.offer.guests} гостей`;
+  popupCapacity.textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
   const popupTime = offerCard.querySelector('.popup__text--time');
-  popupTime.textContent =`Заезд после ${data.offer.checkin}, выезд до ${data.offer.checkout}`;
+  popupTime.textContent =`Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
   const popupFeatures = offerCard.querySelector('.popup__features');
 
-  if (!data.offer.features) {
+  if (!offer.features) {
     popupFeatures.remove();
   } else {
-    popupFeatures.append(createFeatures(data.offer.features));
+    popupFeatures.append(createFeatures(offer.features));
   }
 
   const popupDescription = offerCard.querySelector('.popup__description');
 
-  if (!data.offer.description) {
+  if (!offer.description) {
     popupDescription.remove();
   } else {
-    popupDescription.textContent = data.offer.description;
+    popupDescription.textContent = offer.description;
   }
 
   const popupPhotos = offerCard.querySelector('.popup__photos');
 
-  if (!data.offer.photos) {
+  if (!offer.photos) {
     popupPhotos.remove();
   } else {
-    popupPhotos.append(createPhotos(data.offer.photos));
+    popupPhotos.append(createPhotos(offer.photos));
   }
 
   const popupAvatar = offerCard.querySelector('.popup__avatar');
-  popupAvatar.src = data.autor.avatar;
+  popupAvatar.src = author.avatar;
 
   return offerCard;
 };
-
-const card = createCard(cards[0]);
-
-mapCanvas.appendChild(card);
