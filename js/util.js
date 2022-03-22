@@ -1,3 +1,4 @@
+
 // Возвращает случайное целое число из переданного диапазона включительно.
 export const getRandomNumber = (a, b) => {
   const min = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));

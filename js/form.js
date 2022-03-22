@@ -1,5 +1,6 @@
 const MAX_PRICE = 100000;
 const form = document.querySelector('.ad-form');
+const address = form.querySelector('#address');
 const mapFilter = document.querySelector('.map__filters');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
@@ -7,6 +8,7 @@ const typeField = form.querySelector('#type');
 const priceField = form.querySelector('#price');
 const timeIn = form.querySelector('#timein');
 const timeOut = form.querySelector('#timeout');
+const slider = form.querySelector('.ad-form__slider');
 const minPrice = {
   palace: 10000,
   flat: 1000,
@@ -29,6 +31,17 @@ const pristine = new Pristine(form, {
   successClass: 'form-item--valid',
   errorClass: 'form-item--invalid',
 });
+
+// Функции перевода страницы в активное и неактивное состояние
+export const deactivatePage = () => {
+  form.classList.add('ad-form--disabled');
+  mapFilter.classList.add('map__filters--disabled');
+};
+
+export const activatePage = () => {
+  form.classList.remove('ad-form--disabled');
+  mapFilter.classList.remove('map__filters--disabled');
+};
 
 // Валидация количества комнат и гостей
 const validateRooms = () => roomOptions[roomsField.value].includes(capacityField.value);
@@ -54,6 +67,25 @@ roomsField.addEventListener('change', () => {
 
 pristine.addValidator(capacityField, validateRooms, getRoomsErrorMessage);
 
+// Слайдер для указания цены жилья
+noUiSlider.create(slider, {
+  range: {
+    'min': 0,
+    'max': 100000,
+  },
+  start: 0,
+  step: 100,
+  connect: 'lower',
+  format: {
+    to: function (value) {
+      return value.toFixed(0);
+    },
+    from: function (value) {
+      return value;
+    },
+  },
+});
+
 // Валидация типа жилья и цен
 const validatePrice = (value) => value >= minPrice[typeField.value] && value <= MAX_PRICE;
 const getPriceErrorMessage = () => priceField.value > MAX_PRICE ?
@@ -77,6 +109,15 @@ typeField.addEventListener('change', () => {
   onTypeChange();
 });
 
+priceField.addEventListener('input', () => {
+  slider.noUiSlider.set(priceField.value);
+});
+
+slider.noUiSlider.on('slide', () => {
+  priceField.value = slider.noUiSlider.get();
+  pristine.validate(priceField);
+});
+
 // Валидация времени заезда/выезда
 const timeSync  = (first, second) => {
   second.value = first.value;
@@ -96,13 +137,8 @@ form.addEventListener('submit', (evt) => {
   pristine.validate();
 });
 
-// Функции перевода страницы в активное и неактивное состояние
-export const deactivatePage = () => {
-  form.classList.add('ad-form--disabled');
-  mapFilter.classList.add('map__filters--disabled');
-};
+// Ввод значения поля адресс в форму
 
-export const activatePage = () => {
-  form.classList.remove('ad-form--disabled');
-  mapFilter.classList.remove('map__filters--disabled');
+export const setAdress = (lat, lng) => {
+  address.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 };

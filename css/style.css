@@ -660,12 +660,22 @@ fieldset {
   cursor: pointer;
 }
 
-.ad-form__reset:focus {
+.ad-form__reset:active {
   outline: none;
   -webkit-box-shadow: 0 0 2px 2px #ff6547;
           box-shadow: 0 0 2px 2px #ff6547;
 }
 
+.form-item__error {
+  color: #ff6547;
+  text-align: left;
+  padding-left: 1em;
+}
+
+.form-item--invalid input,
+.form-item--invalid select{
+  box-shadow: 0 0 1px 1px #ff6547;
+} 
 
 /* Футер
    ========================================================================== */
