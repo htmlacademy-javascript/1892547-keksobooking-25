@@ -6,6 +6,7 @@ const typeField = form.querySelector('#type');
 const priceField = form.querySelector('#price');
 const timeIn = form.querySelector('#timein');
 const timeOut = form.querySelector('#timeout');
+const slider = form.querySelector('.ad-form__slider');
 const minPrice = {
   palace: 10000,
   flat: 1000,
@@ -53,6 +54,25 @@ roomsField.addEventListener('change', () => {
 
 pristine.addValidator(capacityField, validateRooms, getRoomsErrorMessage);
 
+// Слайдер для указания цены жилья
+noUiSlider.create(slider, {
+  range: {
+    'min': 0,
+    'max': 100000,
+  },
+  start: 0,
+  step: 100,
+  connect: 'lower',
+  format: {
+    to: function (value) {
+      return value.toFixed(0);
+    },
+    from: function (value) {
+      return value;
+    },
+  },
+});
+
 // Валидация типа жилья и цен
 const validatePrice = (value) => value >= minPrice[typeField.value] && value <= MAX_PRICE;
 const getPriceErrorMessage = () => priceField.value > MAX_PRICE ?
@@ -74,6 +94,15 @@ const onTypeChange = () => {
 
 typeField.addEventListener('change', () => {
   onTypeChange();
+});
+
+priceField.addEventListener('input', () => {
+  slider.noUiSlider.set(priceField.value);
+});
+
+slider.noUiSlider.on('slide', () => {
+  priceField.value = slider.noUiSlider.get();
+  pristine.validate(priceField);
 });
 
 // Валидация времени заезда/выезда
