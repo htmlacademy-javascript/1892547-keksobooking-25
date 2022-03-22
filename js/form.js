@@ -1,5 +1,5 @@
 const MAX_PRICE = 100000;
-export const form = document.querySelector('.ad-form');
+const form = document.querySelector('.ad-form');
 const address = form.querySelector('#address');
 const mapFilter = document.querySelector('.map__filters');
 const roomsField = form.querySelector('#room_number');

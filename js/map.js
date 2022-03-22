@@ -1,15 +1,15 @@
-import {activatePage, deactivatePage, getAddress, DEFAULT_LAT, DEFAULT_LNG} from './form.js';
+import {deactivatePage, activatePage, getAddress, DEFAULT_LAT, DEFAULT_LNG} from './form.js';
 import {cards, createCard} from './create-card.js';
 
 deactivatePage();
 
 // Создание карты и настройка. Активация страницы при инициализации карты.
 const map = L.map('map-canvas')
+  .on('load', activatePage)
   .setView({
     lat: DEFAULT_LAT,
     lng: DEFAULT_LNG,
-  }, 13)
-  .on('load', activatePage());
+  }, 13);
 
 L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -48,15 +48,12 @@ mainPin.on('moveend', getAddress);
 // Создание группы меток с балунами. Отображение их на карте
 const markerGroup = L.layerGroup().addTo(map);
 
-const createMarker = (card) => {
-  const pin = L.marker(
-    card.location,
-    {
-      draggable: true,
-      icon: adPinIcon,
-    });
-  return pin;
-};
+const createMarker = (card) => L.marker(
+  card.location,
+  {
+    draggable: true,
+    icon: adPinIcon,
+  });
 
 const createPinOnMap = (data) => {
   data.forEach((element) => {
