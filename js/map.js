@@ -1,11 +1,16 @@
-import {deactivatePage, activatePage, getAddress, DEFAULT_LAT, DEFAULT_LNG} from './form.js';
+import {deactivatePage, activatePage, setAdress} from './form.js';
 import {cards, createCard} from './create-card.js';
+
+const DEFAULT_LAT = 35.6825;
+const DEFAULT_LNG = 139.7521;
 
 deactivatePage();
 
 // Создание карты и настройка. Активация страницы при инициализации карты.
 const map = L.map('map-canvas')
-  .on('load', activatePage)
+  .on('load', () => {
+    activatePage(); setAdress(DEFAULT_LAT, DEFAULT_LNG);
+  })
   .setView({
     lat: DEFAULT_LAT,
     lng: DEFAULT_LNG,
@@ -43,7 +48,10 @@ const mainPin = L.marker(
 mainPin.addTo(map);
 
 // Ввод значения поля address в форму
-mainPin.on('moveend', getAddress);
+mainPin.on('moveend', (evt) => {
+  const {lat, lng} = evt.target.getLatLng();
+  setAdress(lat, lng);
+});
 
 // Создание группы меток с балунами. Отображение их на карте
 const markerGroup = L.layerGroup().addTo(map);
@@ -55,7 +63,7 @@ const createMarker = (card) => L.marker(
     icon: adPinIcon,
   });
 
-const createPinOnMap = (data) => {
+const renderPins = (data) => {
   data.forEach((element) => {
     const adPin = createMarker(element);
     adPin
@@ -64,7 +72,7 @@ const createPinOnMap = (data) => {
   });
 };
 
-createPinOnMap(cards);
+renderPins(cards);
 
 // подготовка для будущей фильтрации
 // markerGroup.clearLayers();
