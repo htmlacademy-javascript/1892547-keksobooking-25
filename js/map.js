@@ -1,9 +1,5 @@
-import {activatePage, deactivatePage} from './util.js';
-import {form} from './form.js';
+import {activatePage, deactivatePage, getAddress, DEFAULT_LAT, DEFAULT_LNG} from './form.js';
 import {cards, createCard} from './create-card.js';
-
-const DEFAULT_LAT = 35.6825;
-const DEFAULT_LNG = 139.7521;
 
 deactivatePage();
 
@@ -47,35 +43,31 @@ const mainPin = L.marker(
 mainPin.addTo(map);
 
 // Ввод значения поля address в форму
-const address = form.querySelector('#address');
-address.value = `${DEFAULT_LAT}, ${DEFAULT_LNG}`;
-
-mainPin.on('moveend', (evt) => {
-  const coordinate = evt.target.getLatLng();
-  const lat = coordinate.lat;
-  const lng = coordinate.lng;
-  address.value = `${lat.toFixed(5)} , ${lng.toFixed(5)}`;
-});
+mainPin.on('moveend', getAddress);
 
 // Создание группы меток с балунами. Отображение их на карте
 const markerGroup = L.layerGroup().addTo(map);
 
 const createMarker = (card) => {
-  const adPin = L.marker(
+  const pin = L.marker(
     card.location,
     {
       draggable: true,
       icon: adPinIcon,
-    },
-  );
-  adPin
-    .addTo(markerGroup)
-    .bindPopup(createCard(card));
+    });
+  return pin;
 };
 
-cards.forEach((offer) => {
-  createMarker(offer);
-});
+const createPinOnMap = (data) => {
+  data.forEach((element) => {
+    const adPin = createMarker(element);
+    adPin
+      .addTo(markerGroup)
+      .bindPopup(createCard(element));
+  });
+};
+
+createPinOnMap(cards);
 
 // подготовка для будущей фильтрации
 // markerGroup.clearLayers();

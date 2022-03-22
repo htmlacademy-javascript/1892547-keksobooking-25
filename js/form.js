@@ -1,5 +1,7 @@
 const MAX_PRICE = 100000;
 export const form = document.querySelector('.ad-form');
+const address = form.querySelector('#address');
+const mapFilter = document.querySelector('.map__filters');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
 const typeField = form.querySelector('#type');
@@ -7,6 +9,8 @@ const priceField = form.querySelector('#price');
 const timeIn = form.querySelector('#timein');
 const timeOut = form.querySelector('#timeout');
 const slider = form.querySelector('.ad-form__slider');
+export const DEFAULT_LAT = 35.6825;
+export const DEFAULT_LNG = 139.7521;
 const minPrice = {
   palace: 10000,
   flat: 1000,
@@ -29,6 +33,17 @@ const pristine = new Pristine(form, {
   successClass: 'form-item--valid',
   errorClass: 'form-item--invalid',
 });
+
+// Функции перевода страницы в активное и неактивное состояние
+export const deactivatePage = () => {
+  form.classList.add('ad-form--disabled');
+  mapFilter.classList.add('map__filters--disabled');
+};
+
+export const activatePage = () => {
+  form.classList.remove('ad-form--disabled');
+  mapFilter.classList.remove('map__filters--disabled');
+};
 
 // Валидация количества комнат и гостей
 const validateRooms = () => roomOptions[roomsField.value].includes(capacityField.value);
@@ -123,3 +138,12 @@ form.addEventListener('submit', (evt) => {
   evt.preventDefault();
   pristine.validate();
 });
+
+// Ввод значения поля адресс в форму
+address.value = `${DEFAULT_LAT}, ${DEFAULT_LNG}`;
+export const getAddress = (evt) => {
+  const coordinate = evt.target.getLatLng();
+  const lat = coordinate.lat;
+  const lng = coordinate.lng;
+  address.value = `${lat.toFixed(5)} , ${lng.toFixed(5)}`;
+};
