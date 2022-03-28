@@ -1,5 +1,3 @@
-import {generateAds}  from './generate-ads.js';
-
 const TRANSLATIONS = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
@@ -10,7 +8,6 @@ const TRANSLATIONS = {
 const offerCardTemplate = document.querySelector('#card')
   .content
   .querySelector('.popup');
-export const cards = generateAds(10);
 
 const createFeatures = (features) => {
   const container = document.createDocumentFragment();

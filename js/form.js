@@ -1,3 +1,6 @@
+import {sendData} from './api.js';
+import {isEscapeKey} from './util.js';
+
 const MAX_PRICE = 100000;
 const form = document.querySelector('.ad-form');
 const address = form.querySelector('#address');
@@ -9,6 +12,10 @@ const priceField = form.querySelector('#price');
 const timeIn = form.querySelector('#timein');
 const timeOut = form.querySelector('#timeout');
 const slider = form.querySelector('.ad-form__slider');
+const submitButton = form.querySelector('.ad-form__submit');
+const successTemplate = document.querySelector('#success').content;
+const errorTemplate = document.querySelector('#error').content;
+const resetButton = document.querySelector('.ad-form__reset');
 const minPrice = {
   palace: 10000,
   flat: 1000,
@@ -23,7 +30,7 @@ const roomOptions = {
   '100': ['0'],
 };
 
-const pristine = new Pristine(form, {
+const pristine = window.Pristine(form, {
   classTo : 'form-item',
   errorTextParent: 'form-item',
   errorTextClass: 'form-item__error',
@@ -131,14 +138,99 @@ timeOut.addEventListener('change', () => {
   timeSync (timeOut, timeIn);
 });
 
-// Валидация отправки формы
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
-
 // Ввод значения поля адресс в форму
 
 export const setAdress = (lat, lng) => {
   address.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+};
+
+// Валидация отправки формы
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Опубликовываю...';
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
+
+const createSuccessMessage = () => {
+  const success = successTemplate.cloneNode(true);
+  const successMessage = success.querySelector('.success');
+  document.body.append(successMessage);
+
+  const onSuccessKeyDown = (evt) => {
+
+    if (isEscapeKey(evt)) {
+      evt.preventDefault();
+      successMessage.remove();
+      document.removeEventListener('keydown', onSuccessKeyDown);
+    }
+  };
+
+  document.addEventListener('keydown', onSuccessKeyDown);
+
+  successMessage.addEventListener('click', () => {
+    successMessage.remove();
+    document.removeEventListener('keydown', onSuccessKeyDown);
+  });
+};
+
+const createErrorMessage = () => {
+  const error = errorTemplate.cloneNode(true);
+  const errorMessage = error.querySelector('.error');
+  document.body.append(errorMessage);
+
+  const onErrorKeyDown = (evt) => {
+
+    if (isEscapeKey(evt)) {
+      evt.preventDefault();
+      errorMessage.remove();
+      document.removeEventListener('keydown', onErrorKeyDown);
+    }
+  };
+
+  document.addEventListener('keydown', onErrorKeyDown);
+
+  errorMessage.addEventListener('click', () => {
+    errorMessage.remove();
+    document.removeEventListener('keydown', onErrorKeyDown);
+  });
+};
+
+export const setUserFormSubmit = (onSuccess) => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+
+    if (isValid) {
+      blockSubmitButton();
+      sendData(
+        () => {
+          form.reset();
+          slider.noUiSlider.set(priceField.value);
+          priceField.placeholder = minPrice[typeField.value];
+          createSuccessMessage();
+          onSuccess();
+          unblockSubmitButton();
+        },
+        () => {
+          createErrorMessage();
+          unblockSubmitButton();
+        },
+        new FormData(evt.target),
+      );
+    }
+  });
+};
+
+export const onButtonReset = (onReset) => {
+  resetButton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    form.reset();
+    slider.noUiSlider.set(priceField.value);
+    priceField.placeholder = minPrice[typeField.value];
+    onReset();
+  });
 };
