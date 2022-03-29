@@ -1,9 +1,9 @@
 import { showAlert } from './util.js';
 
-const ADRESS = 'https://25.javascript.pages.academy/keksobooking/';
+const URL = 'https://25.javascript.pages.academy/keksobooking/';
 
 export const getData = (onSuccess) => {
-  fetch(`${ADRESS}data`)
+  fetch(`${URL}data`)
     .then((response) => response.json())
     .then(onSuccess)
     .catch(() => {
@@ -12,7 +12,7 @@ export const getData = (onSuccess) => {
 };
 
 export const sendData = (onSuccess, onError, body) => {
-  fetch(ADRESS, {
+  fetch(URL, {
     method: 'POST',
     body,
   })
