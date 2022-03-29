@@ -1,4 +1,4 @@
-import {showAlert} from './util.js';
+import { showAlert } from './util.js';
 
 export const getData = (onSuccess) => {
   fetch('https://25.javascript.pages.academy/keksobooking/data')
@@ -12,15 +12,12 @@ export const getData = (onSuccess) => {
 };
 
 export const sendData = (onSuccess, onFail, body) => {
-  fetch(
-    'https://25.javascript.pages.academy/keksobooking/',
-    {
-      method: 'POST',
-      body,
-    }
-  )
+  fetch('https://25.javascript.pages.academy/keksobooking/', {
+    method: 'POST',
+    body,
+  })
     .then((response) => {
-      if(response.ok) {
+      if (response.ok) {
         onSuccess();
       } else {
         onFail();

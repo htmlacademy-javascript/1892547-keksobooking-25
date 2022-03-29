@@ -1,6 +1,12 @@
-import {deactivatePage, activatePage, setAdress, setUserFormSubmit, onButtonReset} from './form.js';
-import {createCard} from './create-card.js';
-import {getData} from './api.js';
+import {
+  deactivatePage,
+  activatePage,
+  setAdress,
+  setUserFormSubmit,
+  onButtonReset,
+} from './form.js';
+import { createCard } from './create-card.js';
+import { getData } from './api.js';
 
 const DEFAULT_LAT = 35.6825;
 const DEFAULT_LNG = 139.7521;
@@ -14,17 +20,18 @@ const map = L.map('map-canvas')
     activatePage();
     setAdress(DEFAULT_LAT, DEFAULT_LNG);
   })
-  .setView({
-    lat: DEFAULT_LAT,
-    lng: DEFAULT_LNG,
-  }, 13);
+  .setView(
+    {
+      lat: DEFAULT_LAT,
+      lng: DEFAULT_LNG,
+    },
+    13
+  );
 
-L.tileLayer(
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  },
-).addTo(map);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution:
+    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+}).addTo(map);
 
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
@@ -46,16 +53,20 @@ const mainPin = L.marker(
   {
     draggable: true,
     icon: mainPinIcon,
-  },
+  }
 );
 mainPin.addTo(map);
 
 // Функция сброса карты к настройкам по-умолчанию
 const resetMap = () => {
-  map.setView({
-    lat: DEFAULT_LAT,
-    lng: DEFAULT_LNG,
-  }, 13)
+  map
+    .setView(
+      {
+        lat: DEFAULT_LAT,
+        lng: DEFAULT_LNG,
+      },
+      13
+    )
     .closePopup();
   setAdress(DEFAULT_LAT, DEFAULT_LNG);
   mainPin.setLatLng({
@@ -66,16 +77,15 @@ const resetMap = () => {
 
 // Ввод значения поля address в форму
 mainPin.on('moveend', (evt) => {
-  const {lat, lng} = evt.target.getLatLng();
+  const { lat, lng } = evt.target.getLatLng();
   setAdress(lat, lng);
 });
 
 // Создание группы меток с балунами. Отображение их на карте
 const markerGroup = L.layerGroup().addTo(map);
 
-const createMarker = (card) => L.marker(
-  card.location,
-  {
+const createMarker = (card) =>
+  L.marker(card.location, {
     icon: adPinIcon,
   });
 
@@ -83,9 +93,7 @@ const renderPins = (data) => {
   const pins = data.slice(0, MAX_ADS);
   pins.forEach((element) => {
     const adPin = createMarker(element);
-    adPin
-      .addTo(markerGroup)
-      .bindPopup(createCard(element));
+    adPin.addTo(markerGroup).bindPopup(createCard(element));
   });
 };
 

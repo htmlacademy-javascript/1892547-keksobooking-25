@@ -1,5 +1,5 @@
-import {sendData} from './api.js';
-import {isEscapeKey} from './util.js';
+import { sendData } from './api.js';
+import { isEscapeKey } from './util.js';
 
 const MAX_PRICE = 100000;
 const form = document.querySelector('.ad-form');
@@ -24,14 +24,14 @@ const minPrice = {
   hotel: 3000,
 };
 const roomOptions = {
-  '1': ['1'],
-  '2': ['1', '2'],
-  '3': ['1', '2', '3'],
-  '100': ['0'],
+  1: ['1'],
+  2: ['1', '2'],
+  3: ['1', '2', '3'],
+  100: ['0'],
 };
 
 const pristine = window.Pristine(form, {
-  classTo : 'form-item',
+  classTo: 'form-item',
   errorTextParent: 'form-item',
   errorTextClass: 'form-item__error',
   errorTextTag: 'div',
@@ -51,7 +51,8 @@ export const activatePage = () => {
 };
 
 // Валидация количества комнат и гостей
-const validateRooms = () => roomOptions[roomsField.value].includes(capacityField.value);
+const validateRooms = () =>
+  roomOptions[roomsField.value].includes(capacityField.value);
 
 const getRoomsErrorMessage = () => {
   switch (roomsField.value) {
@@ -66,7 +67,8 @@ const getRoomsErrorMessage = () => {
 
     case '100':
       return 'Не для гостей';
-  }};
+  }
+};
 
 roomsField.addEventListener('change', () => {
   pristine.validate(capacityField);
@@ -77,8 +79,8 @@ pristine.addValidator(capacityField, validateRooms, getRoomsErrorMessage);
 // Слайдер для указания цены жилья
 noUiSlider.create(slider, {
   range: {
-    'min': 0,
-    'max': 100000,
+    min: 0,
+    max: 100000,
   },
   start: 0,
   step: 100,
@@ -94,16 +96,18 @@ noUiSlider.create(slider, {
 });
 
 // Валидация типа жилья и цен
-const validatePrice = (value) => value >= minPrice[typeField.value] && value <= MAX_PRICE;
-const getPriceErrorMessage = () => priceField.value > MAX_PRICE ?
-  `Максимальная цена: ${MAX_PRICE}` :
-  `Минимальная цена: ${minPrice[typeField.value]}`;
+const validatePrice = (value) =>
+  value >= minPrice[typeField.value] && value <= MAX_PRICE;
+const getPriceErrorMessage = () =>
+  priceField.value > MAX_PRICE
+    ? `Максимальная цена: ${MAX_PRICE}`
+    : `Минимальная цена: ${minPrice[typeField.value]}`;
 
 pristine.addValidator(priceField, validatePrice, getPriceErrorMessage);
 
 const setPriceRange = (type, price) => {
   price.min = minPrice[type.value];
-  price.placeholder =  minPrice[type.value];
+  price.placeholder = minPrice[type.value];
   price.max = MAX_PRICE;
 };
 
@@ -126,16 +130,16 @@ slider.noUiSlider.on('slide', () => {
 });
 
 // Валидация времени заезда/выезда
-const timeSync  = (first, second) => {
+const timeSync = (first, second) => {
   second.value = first.value;
 };
 
 timeIn.addEventListener('change', () => {
-  timeSync (timeIn, timeOut);
+  timeSync(timeIn, timeOut);
 });
 
 timeOut.addEventListener('change', () => {
-  timeSync (timeOut, timeIn);
+  timeSync(timeOut, timeIn);
 });
 
 // Ввод значения поля адресс в форму
@@ -161,7 +165,6 @@ const createSuccessMessage = () => {
   document.body.append(successMessage);
 
   const onSuccessKeyDown = (evt) => {
-
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       successMessage.remove();
@@ -183,7 +186,6 @@ const createErrorMessage = () => {
   document.body.append(errorMessage);
 
   const onErrorKeyDown = (evt) => {
-
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       errorMessage.remove();
@@ -219,7 +221,7 @@ export const setUserFormSubmit = (onSuccess) => {
           createErrorMessage();
           unblockSubmitButton();
         },
-        new FormData(evt.target),
+        new FormData(evt.target)
       );
     }
   });

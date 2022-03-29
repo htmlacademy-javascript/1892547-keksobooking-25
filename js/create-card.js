@@ -3,11 +3,11 @@ const TRANSLATIONS = {
   bungalow: 'Бунгало',
   house: 'Дом',
   palace: 'Дворец',
-  hotel: 'Отель'
+  hotel: 'Отель',
 };
-const offerCardTemplate = document.querySelector('#card')
-  .content
-  .querySelector('.popup');
+const offerCardTemplate = document
+  .querySelector('#card')
+  .content.querySelector('.popup');
 
 const createFeatures = (features) => {
   const container = document.createDocumentFragment();
@@ -18,7 +18,6 @@ const createFeatures = (features) => {
     container.append(li);
   }
   return container;
-
 };
 
 const createPhotos = (photos) => {
@@ -28,16 +27,15 @@ const createPhotos = (photos) => {
     const image = document.createElement('img');
     image.className = 'popup__photo';
     image.src = src;
-    image.width= '45';
-    image.height= '40';
-    image.alt= 'Фотография жилья';
+    image.width = '45';
+    image.height = '40';
+    image.alt = 'Фотография жилья';
     photosFragment.append(image);
   }
   return photosFragment;
-
 };
 
-export const createCard = ({offer, author}) => {
+export const createCard = ({ offer, author }) => {
   const offerCard = offerCardTemplate.cloneNode(true);
   const popupTitle = offerCard.querySelector('.popup__title');
   popupTitle.textContent = offer.title;
@@ -50,7 +48,7 @@ export const createCard = ({offer, author}) => {
   const popupCapacity = offerCard.querySelector('.popup__text--capacity');
   popupCapacity.textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
   const popupTime = offerCard.querySelector('.popup__text--time');
-  popupTime.textContent =`Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
+  popupTime.textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
   const popupFeatures = offerCard.querySelector('.popup__features');
 
   if (!offer.features) {
