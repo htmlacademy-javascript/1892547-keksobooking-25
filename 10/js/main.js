@@ -1,3 +1,7 @@
 import './form.js';
 import './map.js';
-import './api.js';
+import { getData } from './api.js';
+import { renderPins } from './map.js';
+
+getData(renderPins);
+

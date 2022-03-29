@@ -1,32 +1,27 @@
-import {showAlert} from './util.js';
+import { showAlert } from './util.js';
+
+const ADRESS = 'https://25.javascript.pages.academy/keksobooking/';
 
 export const getData = (onSuccess) => {
-  fetch('https://25.javascript.pages.academy/keksobooking/data')
+  fetch(`${ADRESS}data`)
     .then((response) => response.json())
-    .then((data) => {
-      onSuccess(data);
-    })
+    .then(onSuccess)
     .catch(() => {
       showAlert('Ошибка загрузки данных с сервера');
     });
 };
 
-export const sendData = (onSuccess, onFail, body) => {
-  fetch(
-    'https://25.javascript.pages.academy/keksobooking/',
-    {
-      method: 'POST',
-      body,
-    }
-  )
+export const sendData = (onSuccess, onError, body) => {
+  fetch(ADRESS, {
+    method: 'POST',
+    body,
+  })
     .then((response) => {
-      if(response.ok) {
+      if (response.ok) {
         onSuccess();
       } else {
-        onFail();
+        onError();
       }
     })
-    .catch(() => {
-      onFail();
-    });
+    .catch(onError);
 };

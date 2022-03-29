@@ -1,10 +1,9 @@
-import {sendData} from './api.js';
-import {isEscapeKey} from './util.js';
+import { sendData } from './api.js';
+import { isEscapeKey } from './util.js';
+import { resetMap } from './map.js';
 
 const MAX_PRICE = 100000;
 const form = document.querySelector('.ad-form');
-const address = form.querySelector('#address');
-const mapFilter = document.querySelector('.map__filters');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
 const typeField = form.querySelector('#type');
@@ -24,14 +23,14 @@ const minPrice = {
   hotel: 3000,
 };
 const roomOptions = {
-  '1': ['1'],
-  '2': ['1', '2'],
-  '3': ['1', '2', '3'],
-  '100': ['0'],
+  1: ['1'],
+  2: ['1', '2'],
+  3: ['1', '2', '3'],
+  100: ['0'],
 };
 
 const pristine = window.Pristine(form, {
-  classTo : 'form-item',
+  classTo: 'form-item',
   errorTextParent: 'form-item',
   errorTextClass: 'form-item__error',
   errorTextTag: 'div',
@@ -39,19 +38,9 @@ const pristine = window.Pristine(form, {
   errorClass: 'form-item--invalid',
 });
 
-// Функции перевода страницы в активное и неактивное состояние
-export const deactivatePage = () => {
-  form.classList.add('ad-form--disabled');
-  mapFilter.classList.add('map__filters--disabled');
-};
-
-export const activatePage = () => {
-  form.classList.remove('ad-form--disabled');
-  mapFilter.classList.remove('map__filters--disabled');
-};
-
 // Валидация количества комнат и гостей
-const validateRooms = () => roomOptions[roomsField.value].includes(capacityField.value);
+const validateRooms = () =>
+  roomOptions[roomsField.value].includes(capacityField.value);
 
 const getRoomsErrorMessage = () => {
   switch (roomsField.value) {
@@ -66,7 +55,8 @@ const getRoomsErrorMessage = () => {
 
     case '100':
       return 'Не для гостей';
-  }};
+  }
+};
 
 roomsField.addEventListener('change', () => {
   pristine.validate(capacityField);
@@ -77,8 +67,8 @@ pristine.addValidator(capacityField, validateRooms, getRoomsErrorMessage);
 // Слайдер для указания цены жилья
 noUiSlider.create(slider, {
   range: {
-    'min': 0,
-    'max': 100000,
+    min: 0,
+    max: 100000,
   },
   start: 0,
   step: 100,
@@ -94,16 +84,18 @@ noUiSlider.create(slider, {
 });
 
 // Валидация типа жилья и цен
-const validatePrice = (value) => value >= minPrice[typeField.value] && value <= MAX_PRICE;
-const getPriceErrorMessage = () => priceField.value > MAX_PRICE ?
-  `Максимальная цена: ${MAX_PRICE}` :
-  `Минимальная цена: ${minPrice[typeField.value]}`;
+const validatePrice = (value) =>
+  value >= minPrice[typeField.value] && value <= MAX_PRICE;
+const getPriceErrorMessage = () =>
+  priceField.value > MAX_PRICE
+    ? `Максимальная цена: ${MAX_PRICE}`
+    : `Минимальная цена: ${minPrice[typeField.value]}`;
 
 pristine.addValidator(priceField, validatePrice, getPriceErrorMessage);
 
 const setPriceRange = (type, price) => {
   price.min = minPrice[type.value];
-  price.placeholder =  minPrice[type.value];
+  price.placeholder = minPrice[type.value];
   price.max = MAX_PRICE;
 };
 
@@ -126,23 +118,17 @@ slider.noUiSlider.on('slide', () => {
 });
 
 // Валидация времени заезда/выезда
-const timeSync  = (first, second) => {
+const timeSync = (first, second) => {
   second.value = first.value;
 };
 
 timeIn.addEventListener('change', () => {
-  timeSync (timeIn, timeOut);
+  timeSync(timeIn, timeOut);
 });
 
 timeOut.addEventListener('change', () => {
-  timeSync (timeOut, timeIn);
+  timeSync(timeOut, timeIn);
 });
-
-// Ввод значения поля адресс в форму
-
-export const setAdress = (lat, lng) => {
-  address.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
-};
 
 // Валидация отправки формы
 const blockSubmitButton = () => {
@@ -155,82 +141,78 @@ const unblockSubmitButton = () => {
   submitButton.textContent = 'Опубликовать';
 };
 
-const createSuccessMessage = () => {
+const removeMessage = (message, onAction) => {
+  message.remove();
+  document.removeEventListener('keydown', onAction);
+};
+
+const showSuccessMessage = () => {
   const success = successTemplate.cloneNode(true);
   const successMessage = success.querySelector('.success');
   document.body.append(successMessage);
 
   const onSuccessKeyDown = (evt) => {
-
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      successMessage.remove();
-      document.removeEventListener('keydown', onSuccessKeyDown);
+      removeMessage(successMessage, onSuccessKeyDown);
     }
   };
 
   document.addEventListener('keydown', onSuccessKeyDown);
 
   successMessage.addEventListener('click', () => {
-    successMessage.remove();
-    document.removeEventListener('keydown', onSuccessKeyDown);
+    removeMessage(successMessage, onSuccessKeyDown);
   });
 };
 
-const createErrorMessage = () => {
+const showErrorMessage = () => {
   const error = errorTemplate.cloneNode(true);
   const errorMessage = error.querySelector('.error');
   document.body.append(errorMessage);
 
   const onErrorKeyDown = (evt) => {
-
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      errorMessage.remove();
-      document.removeEventListener('keydown', onErrorKeyDown);
+      removeMessage(errorMessage, onErrorKeyDown);
     }
   };
 
   document.addEventListener('keydown', onErrorKeyDown);
 
   errorMessage.addEventListener('click', () => {
-    errorMessage.remove();
-    document.removeEventListener('keydown', onErrorKeyDown);
+    removeMessage(errorMessage, onErrorKeyDown);
   });
 };
 
-export const setUserFormSubmit = (onSuccess) => {
-  form.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    const isValid = pristine.validate();
-
-    if (isValid) {
-      blockSubmitButton();
-      sendData(
-        () => {
-          form.reset();
-          slider.noUiSlider.set(priceField.value);
-          priceField.placeholder = minPrice[typeField.value];
-          createSuccessMessage();
-          onSuccess();
-          unblockSubmitButton();
-        },
-        () => {
-          createErrorMessage();
-          unblockSubmitButton();
-        },
-        new FormData(evt.target),
-      );
-    }
-  });
+const resetForm = () => {
+  form.reset();
+  slider.noUiSlider.set(priceField.value);
+  priceField.placeholder = minPrice[typeField.value];
+  resetMap();
 };
 
-export const onButtonReset = (onReset) => {
-  resetButton.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    form.reset();
-    slider.noUiSlider.set(priceField.value);
-    priceField.placeholder = minPrice[typeField.value];
-    onReset();
-  });
-};
+form.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+
+  if (isValid) {
+    blockSubmitButton();
+    sendData(
+      () => {
+        resetForm();
+        showSuccessMessage();
+        unblockSubmitButton();
+      },
+      () => {
+        showErrorMessage();
+        unblockSubmitButton();
+      },
+      new FormData(evt.target)
+    );
+  }
+});
+
+resetButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  resetForm();
+});
