@@ -1,23 +1,16 @@
-import {
-  deactivatePage,
-  activatePage,
-  setAdress,
-  setUserFormSubmit,
-  onButtonReset,
-} from './form.js';
 import { createCard } from './create-card.js';
-import { getData } from './api.js';
+import { toggleFormDisabled, setAdress } from './form-via-map.js';
 
 const DEFAULT_LAT = 35.6825;
 const DEFAULT_LNG = 139.7521;
 const MAX_ADS = 10;
 
-deactivatePage();
+toggleFormDisabled(true);
 
 // Создание карты и настройка. Активация страницы при инициализации карты.
 const map = L.map('map-canvas')
   .on('load', () => {
-    activatePage();
+    toggleFormDisabled(false);
     setAdress(DEFAULT_LAT, DEFAULT_LNG);
   })
   .setView(
@@ -58,7 +51,7 @@ const mainPin = L.marker(
 mainPin.addTo(map);
 
 // Функция сброса карты к настройкам по-умолчанию
-const resetMap = () => {
+export const resetMap = () => {
   map
     .setView(
       {
@@ -89,17 +82,13 @@ const createMarker = (card) =>
     icon: adPinIcon,
   });
 
-const renderPins = (data) => {
+export const renderPins = (data) => {
   const pins = data.slice(0, MAX_ADS);
   pins.forEach((element) => {
     const adPin = createMarker(element);
     adPin.addTo(markerGroup).bindPopup(createCard(element));
   });
 };
-
-getData(renderPins);
-setUserFormSubmit(resetMap);
-onButtonReset(resetMap);
 
 // подготовка для будущей фильтрации
 // markerGroup.clearLayers();

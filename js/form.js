@@ -1,10 +1,9 @@
 import { sendData } from './api.js';
 import { isEscapeKey } from './util.js';
+import { resetMap } from './map.js';
 
 const MAX_PRICE = 100000;
 const form = document.querySelector('.ad-form');
-const address = form.querySelector('#address');
-const mapFilter = document.querySelector('.map__filters');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
 const typeField = form.querySelector('#type');
@@ -38,17 +37,6 @@ const pristine = window.Pristine(form, {
   successClass: 'form-item--valid',
   errorClass: 'form-item--invalid',
 });
-
-// Функции перевода страницы в активное и неактивное состояние
-export const deactivatePage = () => {
-  form.classList.add('ad-form--disabled');
-  mapFilter.classList.add('map__filters--disabled');
-};
-
-export const activatePage = () => {
-  form.classList.remove('ad-form--disabled');
-  mapFilter.classList.remove('map__filters--disabled');
-};
 
 // Валидация количества комнат и гостей
 const validateRooms = () =>
@@ -142,12 +130,6 @@ timeOut.addEventListener('change', () => {
   timeSync(timeOut, timeIn);
 });
 
-// Ввод значения поля адресс в форму
-
-export const setAdress = (lat, lng) => {
-  address.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
-};
-
 // Валидация отправки формы
 const blockSubmitButton = () => {
   submitButton.disabled = true;
@@ -159,7 +141,12 @@ const unblockSubmitButton = () => {
   submitButton.textContent = 'Опубликовать';
 };
 
-const createSuccessMessage = () => {
+const removeMessage = (message, onAction) => {
+  message.remove();
+  document.removeEventListener('keydown', onAction);
+};
+
+const showSuccessMessage = () => {
   const success = successTemplate.cloneNode(true);
   const successMessage = success.querySelector('.success');
   document.body.append(successMessage);
@@ -167,20 +154,18 @@ const createSuccessMessage = () => {
   const onSuccessKeyDown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      successMessage.remove();
-      document.removeEventListener('keydown', onSuccessKeyDown);
+      removeMessage(successMessage, onSuccessKeyDown);
     }
   };
 
   document.addEventListener('keydown', onSuccessKeyDown);
 
   successMessage.addEventListener('click', () => {
-    successMessage.remove();
-    document.removeEventListener('keydown', onSuccessKeyDown);
+    removeMessage(successMessage, onSuccessKeyDown);
   });
 };
 
-const createErrorMessage = () => {
+const showErrorMessage = () => {
   const error = errorTemplate.cloneNode(true);
   const errorMessage = error.querySelector('.error');
   document.body.append(errorMessage);
@@ -188,51 +173,46 @@ const createErrorMessage = () => {
   const onErrorKeyDown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      errorMessage.remove();
-      document.removeEventListener('keydown', onErrorKeyDown);
+      removeMessage(errorMessage, onErrorKeyDown);
     }
   };
 
   document.addEventListener('keydown', onErrorKeyDown);
 
   errorMessage.addEventListener('click', () => {
-    errorMessage.remove();
-    document.removeEventListener('keydown', onErrorKeyDown);
+    removeMessage(errorMessage, onErrorKeyDown);
   });
 };
 
-export const setUserFormSubmit = (onSuccess) => {
-  form.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    const isValid = pristine.validate();
-
-    if (isValid) {
-      blockSubmitButton();
-      sendData(
-        () => {
-          form.reset();
-          slider.noUiSlider.set(priceField.value);
-          priceField.placeholder = minPrice[typeField.value];
-          createSuccessMessage();
-          onSuccess();
-          unblockSubmitButton();
-        },
-        () => {
-          createErrorMessage();
-          unblockSubmitButton();
-        },
-        new FormData(evt.target)
-      );
-    }
-  });
+const resetForm = () => {
+  form.reset();
+  slider.noUiSlider.set(priceField.value);
+  priceField.placeholder = minPrice[typeField.value];
+  resetMap();
 };
 
-export const onButtonReset = (onReset) => {
-  resetButton.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    form.reset();
-    slider.noUiSlider.set(priceField.value);
-    priceField.placeholder = minPrice[typeField.value];
-    onReset();
-  });
-};
+form.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+
+  if (isValid) {
+    blockSubmitButton();
+    sendData(
+      () => {
+        resetForm();
+        showSuccessMessage();
+        unblockSubmitButton();
+      },
+      () => {
+        showErrorMessage();
+        unblockSubmitButton();
+      },
+      new FormData(evt.target)
+    );
+  }
+});
+
+resetButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  resetForm();
+});
