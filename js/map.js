@@ -1,18 +1,21 @@
 import { createCard } from './create-card.js';
-import { toggleFormDisabled, setAdress } from './form-via-map.js';
+import { toggleFormDisabled, setAdress} from './form.js';
 
 const DEFAULT_LAT = 35.6825;
 const DEFAULT_LNG = 139.7521;
 const MAX_ADS = 10;
 const ZOOM = 13;
+const form = document.querySelector('.ad-form');
+const mapFilter = document.querySelector('.map__filters');
+const address = form.querySelector('#address');
 
-toggleFormDisabled(true);
+toggleFormDisabled(form, mapFilter, true);
 
 // Создание карты и настройка. Активация страницы при инициализации карты.
 const map = L.map('map-canvas')
   .on('load', () => {
-    toggleFormDisabled(false);
-    setAdress(DEFAULT_LAT, DEFAULT_LNG);
+    toggleFormDisabled(form, mapFilter, false);
+    setAdress(DEFAULT_LAT, DEFAULT_LNG, address);
   })
   .setView(
     {
@@ -62,7 +65,7 @@ export const resetMap = () => {
       ZOOM
     )
     .closePopup();
-  setAdress(DEFAULT_LAT, DEFAULT_LNG);
+  setAdress(DEFAULT_LAT, DEFAULT_LNG, address);
   mainPin.setLatLng({
     lat: DEFAULT_LAT,
     lng: DEFAULT_LNG,
@@ -72,7 +75,7 @@ export const resetMap = () => {
 // Ввод значения поля address в форму
 mainPin.on('moveend', (evt) => {
   const { lat, lng } = evt.target.getLatLng();
-  setAdress(lat, lng);
+  setAdress(lat, lng, address);
 });
 
 // Создание группы меток с балунами. Отображение их на карте
