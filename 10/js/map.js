@@ -85,6 +85,7 @@ const createMarker = (card) =>
 
 export const renderPins = (data) => {
   const pins = data.slice(0, MAX_ADS);
+
   pins.forEach((element) => {
     const adPin = createMarker(element);
     adPin.addTo(markerGroup).bindPopup(createCard(element));
