@@ -1,15 +1,13 @@
 import { showAlert } from './util.js';
 
 const UPLOAD_URL = 'https://25.javascript.pages.academy/keksobooking/';
-const LOAD_URL = 'https://25.javascript.pages.academ/keksobooking/data';
+const LOAD_URL = 'https://25.javascript.pages.academy/keksobooking/data';
 
 export const getData = (onSuccess) => {
   fetch(LOAD_URL)
     .then((response) => response.json())
     .then(onSuccess)
-    .catch(() => {
-      showAlert();
-    });
+    .catch(showAlert);
 };
 
 export const sendData = (onSuccess, onError, body) => {
