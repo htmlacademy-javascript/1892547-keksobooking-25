@@ -4,6 +4,7 @@ import { toggleFormDisabled, setAdress } from './form-via-map.js';
 const DEFAULT_LAT = 35.6825;
 const DEFAULT_LNG = 139.7521;
 const MAX_ADS = 10;
+const ZOOM = 13;
 
 toggleFormDisabled(true);
 
@@ -18,7 +19,7 @@ const map = L.map('map-canvas')
       lat: DEFAULT_LAT,
       lng: DEFAULT_LNG,
     },
-    13
+    ZOOM
   );
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -58,7 +59,7 @@ export const resetMap = () => {
         lat: DEFAULT_LAT,
         lng: DEFAULT_LNG,
       },
-      13
+      ZOOM
     )
     .closePopup();
   setAdress(DEFAULT_LAT, DEFAULT_LNG);

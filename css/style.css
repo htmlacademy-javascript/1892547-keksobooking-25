@@ -1042,6 +1042,19 @@ fieldset {
   opacity: 0.6;
 }
 
+.data-error {
+  padding: 10px;
+  z-index: 1000;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  font-size: 30px;
+  text-align: center;
+  background-color: #ff0000;
+  font-weight: bold;
+}
+
 .visually-hidden {
   position: absolute;
 

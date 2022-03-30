@@ -1,18 +1,19 @@
 import { showAlert } from './util.js';
 
-const URL = 'https://25.javascript.pages.academy/keksobooking/';
+const UPLOAD_URL = 'https://25.javascript.pages.academy/keksobooking/';
+const LOAD_URL = 'https://25.javascript.pages.academ/keksobooking/data';
 
 export const getData = (onSuccess) => {
-  fetch(`${URL}data`)
+  fetch(LOAD_URL)
     .then((response) => response.json())
     .then(onSuccess)
     .catch(() => {
-      showAlert('Ошибка загрузки данных с сервера');
+      showAlert();
     });
 };
 
 export const sendData = (onSuccess, onError, body) => {
-  fetch(URL, {
+  fetch(UPLOAD_URL, {
     method: 'POST',
     body,
   })
