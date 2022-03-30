@@ -133,6 +133,17 @@ timeOut.addEventListener('change', () => {
   timeSync(timeOut, timeIn);
 });
 
+// Активация / деактивация формы и фильтров
+export function toggleFormDisabled (adForm, mapFilter, isDisabled) {
+  adForm.classList.toggle('ad-form--disabled', isDisabled);
+  mapFilter.classList.toggle('map__filters--disabled', isDisabled);
+}
+
+// Ввод значения поля адресс в форму
+export function setAdress (lat, lng, address) {
+  address.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+}
+
 // Валидация отправки формы
 const blockSubmitButton = () => {
   submitButton.disabled = true;
