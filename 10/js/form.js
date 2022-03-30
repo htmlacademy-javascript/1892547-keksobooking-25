@@ -3,6 +3,12 @@ import { isEscapeKey } from './util.js';
 import { resetMap } from './map.js';
 
 const MAX_PRICE = 100000;
+const START = 0;
+const STEP = 100;
+const RANGE = {
+  min: 0,
+  max: 100000,
+};
 const form = document.querySelector('.ad-form');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
@@ -66,12 +72,9 @@ pristine.addValidator(capacityField, validateRooms, getRoomsErrorMessage);
 
 // Слайдер для указания цены жилья
 noUiSlider.create(slider, {
-  range: {
-    min: 0,
-    max: 100000,
-  },
-  start: 0,
-  step: 100,
+  range: RANGE,
+  start: START,
+  step: STEP,
   connect: 'lower',
   format: {
     to: function (value) {
