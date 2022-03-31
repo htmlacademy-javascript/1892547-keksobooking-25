@@ -1,8 +1,8 @@
 import { createCard } from './create-card.js';
 import { toggleFormDisabled, setAdress} from './form.js';
 
-const DEFAULT_LAT = 35.6825;
-const DEFAULT_LNG = 139.7521;
+export const DEFAULT_LAT = 35.6825;
+export const DEFAULT_LNG = 139.7521;
 const MAX_ADS = 10;
 const ZOOM = 13;
 const form = document.querySelector('.ad-form');
@@ -65,7 +65,6 @@ export const resetMap = () => {
       ZOOM
     )
     .closePopup();
-  setAdress(DEFAULT_LAT, DEFAULT_LNG, address);
   mainPin.setLatLng({
     lat: DEFAULT_LAT,
     lng: DEFAULT_LNG,

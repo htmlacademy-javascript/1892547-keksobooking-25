@@ -1,15 +1,16 @@
 import { sendData } from './api.js';
-import { isEscapeKey } from './util.js';
-import { resetMap } from './map.js';
+import { resetMap, DEFAULT_LAT, DEFAULT_LNG } from './map.js';
+import { showMessage } from './show-message.js';
 
 const MAX_PRICE = 100000;
-const START = 0;
-const STEP = 100;
-const RANGE = {
+const SLIDER_START = 0;
+const SLIDER_STEP = 100;
+const SLIDER_RANGE = {
   min: 0,
   max: 100000,
 };
 const form = document.querySelector('.ad-form');
+const address = form.querySelector('#address');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
 const typeField = form.querySelector('#type');
@@ -72,9 +73,9 @@ pristine.addValidator(capacityField, validateRooms, getRoomsErrorMessage);
 
 // Слайдер для указания цены жилья
 noUiSlider.create(slider, {
-  range: RANGE,
-  start: START,
-  step: STEP,
+  range: SLIDER_RANGE,
+  start: SLIDER_START,
+  step: SLIDER_STEP,
   connect: 'lower',
   format: {
     to: function (value) {
@@ -140,8 +141,8 @@ export function toggleFormDisabled (adForm, mapFilter, isDisabled) {
 }
 
 // Ввод значения поля адресс в форму
-export function setAdress (lat, lng, address) {
-  address.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+export function setAdress (lat, lng, addressField) {
+  addressField.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 }
 
 // Валидация отправки формы
@@ -155,54 +156,23 @@ const unblockSubmitButton = () => {
   submitButton.textContent = 'Опубликовать';
 };
 
-const removeMessage = (message, onAction) => {
-  message.remove();
-  document.removeEventListener('keydown', onAction);
-};
-
-const showSuccessMessage = () => {
-  const success = successTemplate.cloneNode(true);
-  const successMessage = success.querySelector('.success');
-  document.body.append(successMessage);
-
-  const onSuccessKeyDown = (evt) => {
-    if (isEscapeKey(evt)) {
-      evt.preventDefault();
-      removeMessage(successMessage, onSuccessKeyDown);
-    }
-  };
-
-  document.addEventListener('keydown', onSuccessKeyDown);
-
-  successMessage.addEventListener('click', () => {
-    removeMessage(successMessage, onSuccessKeyDown);
-  });
-};
-
-const showErrorMessage = () => {
-  const error = errorTemplate.cloneNode(true);
-  const errorMessage = error.querySelector('.error');
-  document.body.append(errorMessage);
-
-  const onErrorKeyDown = (evt) => {
-    if (isEscapeKey(evt)) {
-      evt.preventDefault();
-      removeMessage(errorMessage, onErrorKeyDown);
-    }
-  };
-
-  document.addEventListener('keydown', onErrorKeyDown);
-
-  errorMessage.addEventListener('click', () => {
-    removeMessage(errorMessage, onErrorKeyDown);
-  });
-};
-
 const resetForm = () => {
   form.reset();
   slider.noUiSlider.set(priceField.value);
   priceField.placeholder = minPrice[typeField.value];
+  setAdress(DEFAULT_LAT, DEFAULT_LNG, address);
   resetMap();
+};
+
+const onAdSuccess = () => {
+  resetForm();
+  showMessage(successTemplate, '.success');
+  unblockSubmitButton();
+};
+
+const onAdError = () => {
+  showMessage(errorTemplate, '.error');
+  unblockSubmitButton();
 };
 
 form.addEventListener('submit', (evt) => {
@@ -212,15 +182,8 @@ form.addEventListener('submit', (evt) => {
   if (isValid) {
     blockSubmitButton();
     sendData(
-      () => {
-        resetForm();
-        showSuccessMessage();
-        unblockSubmitButton();
-      },
-      () => {
-        showErrorMessage();
-        unblockSubmitButton();
-      },
+      onAdSuccess,
+      onAdError,
       new FormData(evt.target)
     );
   }

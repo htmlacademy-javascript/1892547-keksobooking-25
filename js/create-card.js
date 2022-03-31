@@ -17,6 +17,7 @@ const createFeatures = (features) => {
     li.className = `popup__feature popup__feature--${feature}`;
     container.append(li);
   }
+
   return container;
 };
 
