@@ -1,5 +1,3 @@
-const ALERT_SHOW_TIME = 5000;
-const alertTemplate = document.querySelector('#data-error').content;
 
 // Возвращает случайное целое число из переданного диапазона включительно.
 export const getRandomNumber = (a, b) => {
@@ -22,17 +20,6 @@ export const getRandomFloat = (a, b, digits = 1) => {
 // Вовзращает случайный элемент массива
 export const getRandomArrayElement = (elements) =>
   elements[getRandomNumber(0, elements.length - 1)];
-
-// Возвращает сообщение об ошибке на странице
-export const showAlert = () => {
-  const alertContainer = alertTemplate.cloneNode(true);
-  const errorMessage = alertContainer.querySelector('.data-error');
-  document.body.append(errorMessage);
-
-  setTimeout(() => {
-    errorMessage.remove();
-  }, ALERT_SHOW_TIME);
-};
 
 // Проверка на ESC
 export const isEscapeKey = (evt) => evt.key === 'Escape';

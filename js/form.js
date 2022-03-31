@@ -1,6 +1,6 @@
 import { sendData } from './api.js';
 import { resetMap, DEFAULT_LAT, DEFAULT_LNG } from './map.js';
-import { showMessage } from './show-message.js';
+import { showMessage } from './dialogs.js';
 
 const MAX_PRICE = 100000;
 const SLIDER_START = 0;

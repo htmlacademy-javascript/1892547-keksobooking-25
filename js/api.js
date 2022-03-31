@@ -1,4 +1,4 @@
-import { showAlert } from './util.js';
+import { showAlert } from './dialogs.js';
 
 const UPLOAD_URL = 'https://25.javascript.pages.academy/keksobooking/';
 const LOAD_URL = 'https://25.javascript.pages.academy/keksobooking/data';
