@@ -18,4 +18,8 @@ export const getRandomFloat = (a, b, digits = 1) => {
 };
 
 // Вовзращает случайный элемент массива
-export const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
+export const getRandomArrayElement = (elements) =>
+  elements[getRandomNumber(0, elements.length - 1)];
+
+// Проверка на ESC
+export const isEscapeKey = (evt) => evt.key === 'Escape';

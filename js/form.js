@@ -1,7 +1,16 @@
+import { sendData } from './api.js';
+import { resetMap, DEFAULT_LAT, DEFAULT_LNG } from './map.js';
+import { showMessage } from './dialogs.js';
+
 const MAX_PRICE = 100000;
+const SLIDER_START = 0;
+const SLIDER_STEP = 100;
+const SLIDER_RANGE = {
+  min: 0,
+  max: 100000,
+};
 const form = document.querySelector('.ad-form');
 const address = form.querySelector('#address');
-const mapFilter = document.querySelector('.map__filters');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
 const typeField = form.querySelector('#type');
@@ -9,6 +18,10 @@ const priceField = form.querySelector('#price');
 const timeIn = form.querySelector('#timein');
 const timeOut = form.querySelector('#timeout');
 const slider = form.querySelector('.ad-form__slider');
+const submitButton = form.querySelector('.ad-form__submit');
+const successTemplate = document.querySelector('#success').content;
+const errorTemplate = document.querySelector('#error').content;
+const resetButton = document.querySelector('.ad-form__reset');
 const minPrice = {
   palace: 10000,
   flat: 1000,
@@ -17,14 +30,14 @@ const minPrice = {
   hotel: 3000,
 };
 const roomOptions = {
-  '1': ['1'],
-  '2': ['1', '2'],
-  '3': ['1', '2', '3'],
-  '100': ['0'],
+  1: ['1'],
+  2: ['1', '2'],
+  3: ['1', '2', '3'],
+  100: ['0'],
 };
 
-const pristine = new Pristine(form, {
-  classTo : 'form-item',
+const pristine = window.Pristine(form, {
+  classTo: 'form-item',
   errorTextParent: 'form-item',
   errorTextClass: 'form-item__error',
   errorTextTag: 'div',
@@ -32,19 +45,9 @@ const pristine = new Pristine(form, {
   errorClass: 'form-item--invalid',
 });
 
-// Функции перевода страницы в активное и неактивное состояние
-export const deactivatePage = () => {
-  form.classList.add('ad-form--disabled');
-  mapFilter.classList.add('map__filters--disabled');
-};
-
-export const activatePage = () => {
-  form.classList.remove('ad-form--disabled');
-  mapFilter.classList.remove('map__filters--disabled');
-};
-
 // Валидация количества комнат и гостей
-const validateRooms = () => roomOptions[roomsField.value].includes(capacityField.value);
+const validateRooms = () =>
+  roomOptions[roomsField.value].includes(capacityField.value);
 
 const getRoomsErrorMessage = () => {
   switch (roomsField.value) {
@@ -59,7 +62,8 @@ const getRoomsErrorMessage = () => {
 
     case '100':
       return 'Не для гостей';
-  }};
+  }
+};
 
 roomsField.addEventListener('change', () => {
   pristine.validate(capacityField);
@@ -69,12 +73,9 @@ pristine.addValidator(capacityField, validateRooms, getRoomsErrorMessage);
 
 // Слайдер для указания цены жилья
 noUiSlider.create(slider, {
-  range: {
-    'min': 0,
-    'max': 100000,
-  },
-  start: 0,
-  step: 100,
+  range: SLIDER_RANGE,
+  start: SLIDER_START,
+  step: SLIDER_STEP,
   connect: 'lower',
   format: {
     to: function (value) {
@@ -87,16 +88,18 @@ noUiSlider.create(slider, {
 });
 
 // Валидация типа жилья и цен
-const validatePrice = (value) => value >= minPrice[typeField.value] && value <= MAX_PRICE;
-const getPriceErrorMessage = () => priceField.value > MAX_PRICE ?
-  `Максимальная цена: ${MAX_PRICE}` :
-  `Минимальная цена: ${minPrice[typeField.value]}`;
+const validatePrice = (value) =>
+  value >= minPrice[typeField.value] && value <= MAX_PRICE;
+const getPriceErrorMessage = () =>
+  priceField.value > MAX_PRICE
+    ? `Максимальная цена: ${MAX_PRICE}`
+    : `Минимальная цена: ${minPrice[typeField.value]}`;
 
 pristine.addValidator(priceField, validatePrice, getPriceErrorMessage);
 
 const setPriceRange = (type, price) => {
   price.min = minPrice[type.value];
-  price.placeholder =  minPrice[type.value];
+  price.placeholder = minPrice[type.value];
   price.max = MAX_PRICE;
 };
 
@@ -119,26 +122,74 @@ slider.noUiSlider.on('slide', () => {
 });
 
 // Валидация времени заезда/выезда
-const timeSync  = (first, second) => {
+const timeSync = (first, second) => {
   second.value = first.value;
 };
 
 timeIn.addEventListener('change', () => {
-  timeSync (timeIn, timeOut);
+  timeSync(timeIn, timeOut);
 });
 
 timeOut.addEventListener('change', () => {
-  timeSync (timeOut, timeIn);
+  timeSync(timeOut, timeIn);
 });
 
-// Валидация отправки формы
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
+// Активация / деактивация формы и фильтров
+export function toggleFormDisabled (adForm, mapFilter, isDisabled) {
+  adForm.classList.toggle('ad-form--disabled', isDisabled);
+  mapFilter.classList.toggle('map__filters--disabled', isDisabled);
+}
 
 // Ввод значения поля адресс в форму
+export function setAdress (lat, lng, addressField) {
+  addressField.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+}
 
-export const setAdress = (lat, lng) => {
-  address.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+// Валидация отправки формы
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Опубликовываю...';
 };
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
+
+const resetForm = () => {
+  form.reset();
+  slider.noUiSlider.set(priceField.value);
+  priceField.placeholder = minPrice[typeField.value];
+  setAdress(DEFAULT_LAT, DEFAULT_LNG, address);
+  resetMap();
+};
+
+const onAdSuccess = () => {
+  resetForm();
+  showMessage(successTemplate, '.success');
+  unblockSubmitButton();
+};
+
+const onAdError = () => {
+  showMessage(errorTemplate, '.error');
+  unblockSubmitButton();
+};
+
+form.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+
+  if (isValid) {
+    blockSubmitButton();
+    sendData(
+      onAdSuccess,
+      onAdError,
+      new FormData(evt.target)
+    );
+  }
+});
+
+resetButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  resetForm();
+});
