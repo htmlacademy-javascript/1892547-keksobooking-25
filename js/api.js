@@ -16,11 +16,13 @@ export const sendData = (onSuccess, onError, body) => {
     body,
   })
     .then((response) => {
+
       if (response.ok) {
         onSuccess();
       } else {
         onError();
       }
     })
+
     .catch(onError);
 };

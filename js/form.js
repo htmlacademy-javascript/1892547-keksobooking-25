@@ -1,6 +1,6 @@
 import { sendData } from './api.js';
 import { resetMap, DEFAULT_LAT, DEFAULT_LNG } from './map.js';
-import { showMessage } from './dialogs.js';
+import { showMessage, successTemplate, errorTemplate } from './dialogs.js';
 
 const MAX_PRICE = 100000;
 const SLIDER_START = 0;
@@ -19,8 +19,6 @@ const timeIn = form.querySelector('#timein');
 const timeOut = form.querySelector('#timeout');
 const slider = form.querySelector('.ad-form__slider');
 const submitButton = form.querySelector('.ad-form__submit');
-const successTemplate = document.querySelector('#success').content;
-const errorTemplate = document.querySelector('#error').content;
 const resetButton = document.querySelector('.ad-form__reset');
 const minPrice = {
   palace: 10000,
@@ -166,12 +164,12 @@ const resetForm = () => {
 
 const onAdSuccess = () => {
   resetForm();
-  showMessage(successTemplate, '.success');
+  showMessage(successTemplate);
   unblockSubmitButton();
 };
 
 const onAdError = () => {
-  showMessage(errorTemplate, '.error');
+  showMessage(errorTemplate);
   unblockSubmitButton();
 };
 
