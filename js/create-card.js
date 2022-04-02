@@ -5,6 +5,7 @@ const TRANSLATIONS = {
   palace: 'Дворец',
   hotel: 'Отель',
 };
+
 const offerCardTemplate = document
   .querySelector('#card')
   .content.querySelector('.popup');
