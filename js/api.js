@@ -1,13 +1,18 @@
-import { showAlert } from './dialogs.js';
-
 const UPLOAD_URL = 'https://25.javascript.pages.academy/keksobooking/';
 const LOAD_URL = 'https://25.javascript.pages.academy/keksobooking/data';
 
-export const getData = (onSuccess) => {
+export const getData = (onSuccess, onError) => {
   fetch(LOAD_URL)
-    .then((response) => response.json())
-    .then(onSuccess)
-    .catch(showAlert);
+    .then((response) => {
+
+      if (response.ok) {
+        return response.json();
+      }
+
+      onError();
+    })
+    .then((data) => onSuccess(data))
+    .catch(onError);
 };
 
 export const sendData = (onSuccess, onError, body) => {

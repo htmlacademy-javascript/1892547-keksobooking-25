@@ -1,29 +1,23 @@
 import { createCard } from './create-card.js';
 import { toggleFormDisabled, setAdress} from './form.js';
+import { filterData } from './filters.js';
+import { getData } from './api.js';
+import { getAds, setAds } from './get-ads.js';
+import { showAlert } from './dialogs.js';
 
 export const DEFAULT_LAT = 35.6825;
 export const DEFAULT_LNG = 139.7521;
 const MAX_ADS = 10;
 const ZOOM = 13;
+
 const form = document.querySelector('.ad-form');
-const mapFilter = document.querySelector('.map__filters');
+const mapFilters = document.querySelector('.map__filters');
 const address = form.querySelector('#address');
 
-toggleFormDisabled(form, mapFilter, true);
+toggleFormDisabled(form, mapFilters, true);
 
 // Создание карты и настройка. Активация страницы при инициализации карты.
-const map = L.map('map-canvas')
-  .on('load', () => {
-    toggleFormDisabled(form, mapFilter, false);
-    setAdress(DEFAULT_LAT, DEFAULT_LNG, address);
-  })
-  .setView(
-    {
-      lat: DEFAULT_LAT,
-      lng: DEFAULT_LNG,
-    },
-    ZOOM
-  );
+const map = L.map('map-canvas');
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution:
@@ -54,6 +48,34 @@ const mainPin = L.marker(
 );
 mainPin.addTo(map);
 
+
+// Ввод значения поля address в форму
+mainPin.on('moveend', (evt) => {
+  const { lat, lng } = evt.target.getLatLng();
+  setAdress(lat, lng, address);
+});
+
+// Создание группы меток с балунами. Отображение их на карте
+const markerGroup = L.layerGroup().addTo(map);
+
+export const clearMarkers = () => {
+  markerGroup.clearLayers();
+};
+
+
+const createMarker = (card) =>
+  L.marker(card.location, {
+    icon: adPinIcon,
+  });
+
+export const renderPins = (data) => {
+  const pins = filterData(data).slice(0, MAX_ADS);
+  pins.forEach((element) => {
+    const adPin = createMarker(element);
+    adPin.addTo(markerGroup).bindPopup(createCard(element));
+  });
+};
+
 // Функция сброса карты к настройкам по-умолчанию
 export const resetMap = () => {
   map
@@ -69,33 +91,25 @@ export const resetMap = () => {
     lat: DEFAULT_LAT,
     lng: DEFAULT_LNG,
   });
+  mapFilters.reset();
+  clearMarkers();
+  renderPins(getAds());
 };
 
-// Ввод значения поля address в форму
-mainPin.on('moveend', (evt) => {
-  const { lat, lng } = evt.target.getLatLng();
-  setAdress(lat, lng, address);
-});
-
-// Создание группы меток с балунами. Отображение их на карте
-const markerGroup = L.layerGroup().addTo(map);
-
-const createMarker = (card) =>
-  L.marker(card.location, {
-    icon: adPinIcon,
-  });
-
-export const renderPins = (data) => {
-  const pins = data.slice(0, MAX_ADS);
-
-  pins.forEach((element) => {
-    const adPin = createMarker(element);
-    adPin.addTo(markerGroup).bindPopup(createCard(element));
-  });
+const onGetDataSuccess = (data) => {
+  setAds(data);
+  setAdress(DEFAULT_LAT, DEFAULT_LNG, address);
+  renderPins(data);
 };
 
-// подготовка для будущей фильтрации
-// markerGroup.clearLayers();
-// cards.slice(cards.length / 2).forEach((card) => {
-//   createMarker(card);
-// });
+map.on('load', () => {
+  getData(onGetDataSuccess, showAlert);
+  toggleFormDisabled(form, mapFilters, false);
+})
+  .setView(
+    {
+      lat: DEFAULT_LAT,
+      lng: DEFAULT_LNG,
+    },
+    ZOOM
+  );
