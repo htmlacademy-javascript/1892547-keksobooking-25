@@ -1,5 +1,5 @@
 import { createCard } from './create-card.js';
-import { toggleFormDisabled, setAdress} from './form.js';
+import { toggleFormDisabled, toggleMapFiltersDisabled,  setAdress} from './form.js';
 import { filterData } from './filters.js';
 import { getData } from './api.js';
 import { getAds, setAds } from './get-ads.js';
@@ -14,7 +14,8 @@ const form = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
 const address = form.querySelector('#address');
 
-toggleFormDisabled(form, mapFilters, true);
+toggleFormDisabled(form, true);
+toggleMapFiltersDisabled(mapFilters, true);
 
 // Создание карты и настройка. Активация страницы при инициализации карты.
 const map = L.map('map-canvas');
@@ -98,13 +99,14 @@ export const resetMap = () => {
 
 const onGetDataSuccess = (data) => {
   setAds(data);
-  setAdress(DEFAULT_LAT, DEFAULT_LNG, address);
   renderPins(data);
+  toggleMapFiltersDisabled(mapFilters, false);
 };
 
 map.on('load', () => {
   getData(onGetDataSuccess, showAlert);
-  toggleFormDisabled(form, mapFilters, false);
+  setAdress(DEFAULT_LAT, DEFAULT_LNG, address);
+  toggleFormDisabled(form, false);
 })
   .setView(
     {

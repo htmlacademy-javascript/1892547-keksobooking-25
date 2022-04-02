@@ -9,7 +9,7 @@ const SLIDER_RANGE = {
   min: 0,
   max: 100000,
 };
-const form = document.querySelector('.ad-form');
+export const form = document.querySelector('.ad-form');
 const address = form.querySelector('#address');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
@@ -133,8 +133,11 @@ timeOut.addEventListener('change', () => {
 });
 
 // Активация / деактивация формы и фильтров
-export function toggleFormDisabled (adForm, mapFilter, isDisabled) {
+export function toggleFormDisabled (adForm, isDisabled) {
   adForm.classList.toggle('ad-form--disabled', isDisabled);
+}
+
+export function toggleMapFiltersDisabled (mapFilter, isDisabled) {
   mapFilter.classList.toggle('map__filters--disabled', isDisabled);
 }
 
