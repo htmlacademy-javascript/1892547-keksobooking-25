@@ -1,24 +1,51 @@
-import { form } from './form.js';
-
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+const DEFAULT_AVATAR_SRC = 'img/muffin-grey.svg';
 
+const form = document.querySelector('.ad-form');
 const imageFileChooser = form.querySelector('.ad-form__upload input[type=file]');
-const imagePreview = form.querySelector('.ad-form__photo img');
+const imagesPreviewContainer = form.querySelector('.ad-form__photo-container');
+const photoContainer = imagesPreviewContainer.querySelector('.ad-form__photo');
 const avatarFileChooser = form.querySelector('.ad-form__field input[type=file]');
 const avatarPreview = form.querySelector('.ad-form-header__preview img');
 
-const setImagePreview = (fileChooser, preview) => {
-  fileChooser.addEventListener('change', () => {
-    const file = fileChooser.files[0];
-    const fileName = file.name.toLowerCase();
 
-    const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+avatarFileChooser.addEventListener('change', () => {
+  const file = avatarFileChooser.files[0];
+  const fileName = file.name.toLowerCase();
 
-    if (matches) {
-      preview.src = URL.createObjectURL(file);
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+
+  if (matches) {
+    avatarPreview.src = URL.createObjectURL(file);
+  }
+});
+
+imageFileChooser.addEventListener('change', () => {
+  const file = imageFileChooser.files[0];
+  const fileName = file.name.toLowerCase();
+
+  const matches = FILE_TYPES.some((type) => fileName.endsWith(type));
+
+  if (matches) {
+    const newImage = document.createElement('img');
+    newImage.src = URL.createObjectURL(file);
+    newImage.width = '40';
+    newImage.height = '44';
+
+    if (photoContainer.querySelector('img')) {
+      const newPreviewContainer = document.createElement('div');
+      newPreviewContainer.classList.add('ad-form__photo');
+      imagesPreviewContainer.append(newPreviewContainer);
+      newPreviewContainer.append(newImage);
+    } else {
+      photoContainer.append(newImage);
     }
-  });
-};
+  }
+});
 
-setImagePreview(imageFileChooser, imagePreview);
-setImagePreview(avatarFileChooser, avatarPreview);
+export const clearImages = () => {
+  const photos = document.querySelectorAll('.ad-form__photo');
+  avatarPreview.src = DEFAULT_AVATAR_SRC;
+
+  photos.forEach((photo, index) => index === 0 ? photo.firstChild.remove() : photo.remove());
+};

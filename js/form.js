@@ -1,6 +1,7 @@
 import { sendData } from './api.js';
 import { resetMap, DEFAULT_LAT, DEFAULT_LNG } from './map.js';
 import { showMessage, successTemplate, errorTemplate } from './dialogs.js';
+import { clearImages } from './photos.js';
 
 const MAX_PRICE = 100000;
 const SLIDER_START = 0;
@@ -9,7 +10,7 @@ const SLIDER_RANGE = {
   min: 0,
   max: 100000,
 };
-export const form = document.querySelector('.ad-form');
+const form = document.querySelector('.ad-form');
 const address = form.querySelector('#address');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
@@ -159,6 +160,7 @@ const unblockSubmitButton = () => {
 
 const resetForm = () => {
   form.reset();
+  clearImages();
   slider.noUiSlider.set(priceField.value);
   priceField.placeholder = minPrice[typeField.value];
   setAdress(DEFAULT_LAT, DEFAULT_LNG, address);
