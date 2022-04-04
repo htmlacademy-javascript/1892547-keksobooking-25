@@ -1,6 +1,7 @@
 import { sendData } from './api.js';
 import { resetMap, DEFAULT_LAT, DEFAULT_LNG } from './map.js';
 import { showMessage, successTemplate, errorTemplate } from './dialogs.js';
+import { clearImages } from './photos.js';
 
 const MAX_PRICE = 100000;
 const SLIDER_START = 0;
@@ -10,7 +11,8 @@ const SLIDER_RANGE = {
   max: 100000,
 };
 const form = document.querySelector('.ad-form');
-const address = form.querySelector('#address');
+export const mapFilters = document.querySelector('.map__filters');
+const adAdress = document.querySelector('#address');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
 const typeField = form.querySelector('#type');
@@ -133,15 +135,18 @@ timeOut.addEventListener('change', () => {
 });
 
 // Активация / деактивация формы и фильтров
-export function toggleFormDisabled (adForm, mapFilter, isDisabled) {
-  adForm.classList.toggle('ad-form--disabled', isDisabled);
-  mapFilter.classList.toggle('map__filters--disabled', isDisabled);
-}
+export const toggleAdFormDisabled = (isDisabled) => {
+  form.classList.toggle('ad-form--disabled', isDisabled);
+};
+
+export const toggleMapFiltersDisabled = (isDisabled) => {
+  mapFilters.classList.toggle('map__filters--disabled', isDisabled);
+};
 
 // Ввод значения поля адресс в форму
-export function setAdress (lat, lng, addressField) {
-  addressField.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
-}
+export const setAdress = (lat, lng) => {
+  adAdress.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+};
 
 // Валидация отправки формы
 const blockSubmitButton = () => {
@@ -156,9 +161,10 @@ const unblockSubmitButton = () => {
 
 const resetForm = () => {
   form.reset();
+  clearImages();
   slider.noUiSlider.set(priceField.value);
   priceField.placeholder = minPrice[typeField.value];
-  setAdress(DEFAULT_LAT, DEFAULT_LNG, address);
+  setAdress(DEFAULT_LAT, DEFAULT_LNG);
   resetMap();
 };
 
@@ -191,3 +197,5 @@ resetButton.addEventListener('click', (evt) => {
   evt.preventDefault();
   resetForm();
 });
+
+toggleAdFormDisabled(true);
