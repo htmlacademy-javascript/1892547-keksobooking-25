@@ -1,6 +1,7 @@
 import { getAds } from './get-ads.js';
 import { renderPins, clearMarkers } from './map.js';
 import { debounce } from './util.js';
+import { mapFilters } from './form.js';
 
 const FILTER_DELAY = 500;
 const DEFAULT_VALUE = 'any';
@@ -15,7 +16,7 @@ const ApartmentPrices = {
   MIDDLE: 'middle',
   HIGH: 'high'
 };
-const mapFilters = document.querySelector('.map__filters');
+
 const housingTypeFilter = mapFilters.querySelector('#housing-type');
 const housingPriceFilter = mapFilters.querySelector('#housing-price');
 const housingRoomsFilter = mapFilters.querySelector('#housing-rooms');

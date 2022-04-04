@@ -10,9 +10,10 @@ const SLIDER_RANGE = {
   min: 0,
   max: 100000,
 };
+
 const form = document.querySelector('.ad-form');
 export const mapFilters = document.querySelector('.map__filters');
-const adAdress = document.querySelector('#address');
+const address = document.querySelector('#address');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
 const typeField = form.querySelector('#type');
@@ -22,6 +23,7 @@ const timeOut = form.querySelector('#timeout');
 const slider = form.querySelector('.ad-form__slider');
 const submitButton = form.querySelector('.ad-form__submit');
 const resetButton = document.querySelector('.ad-form__reset');
+
 const minPrice = {
   palace: 10000,
   flat: 1000,
@@ -29,6 +31,7 @@ const minPrice = {
   bungalow: 0,
   hotel: 3000,
 };
+
 const roomOptions = {
   1: ['1'],
   2: ['1', '2'],
@@ -45,7 +48,6 @@ const pristine = window.Pristine(form, {
   errorClass: 'form-item--invalid',
 });
 
-// Валидация количества комнат и гостей
 const validateRooms = () =>
   roomOptions[roomsField.value].includes(capacityField.value);
 
@@ -71,7 +73,6 @@ roomsField.addEventListener('change', () => {
 
 pristine.addValidator(capacityField, validateRooms, getRoomsErrorMessage);
 
-// Слайдер для указания цены жилья
 noUiSlider.create(slider, {
   range: SLIDER_RANGE,
   start: SLIDER_START,
@@ -87,7 +88,6 @@ noUiSlider.create(slider, {
   },
 });
 
-// Валидация типа жилья и цен
 const validatePrice = (value) =>
   value >= minPrice[typeField.value] && value <= MAX_PRICE;
 const getPriceErrorMessage = () =>
@@ -121,7 +121,6 @@ slider.noUiSlider.on('slide', () => {
   pristine.validate(priceField);
 });
 
-// Валидация времени заезда/выезда
 const timeSync = (first, second) => {
   second.value = first.value;
 };
@@ -134,7 +133,6 @@ timeOut.addEventListener('change', () => {
   timeSync(timeOut, timeIn);
 });
 
-// Активация / деактивация формы и фильтров
 export const toggleAdFormDisabled = (isDisabled) => {
   form.classList.toggle('ad-form--disabled', isDisabled);
 };
@@ -143,12 +141,10 @@ export const toggleMapFiltersDisabled = (isDisabled) => {
   mapFilters.classList.toggle('map__filters--disabled', isDisabled);
 };
 
-// Ввод значения поля адресс в форму
 export const setAdress = (lat, lng) => {
-  adAdress.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  address.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 };
 
-// Валидация отправки формы
 const blockSubmitButton = () => {
   submitButton.disabled = true;
   submitButton.textContent = 'Опубликовываю...';

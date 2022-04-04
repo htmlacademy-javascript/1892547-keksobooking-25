@@ -3,16 +3,15 @@ import { toggleAdFormDisabled, toggleMapFiltersDisabled, setAdress, mapFilters} 
 import { filterData } from './filters.js';
 import { getData } from './api.js';
 import { getAds, setAds } from './get-ads.js';
-import { showAlert } from './dialogs.js';
+import { onGetDataShowError } from './dialogs.js';
 
 export const DEFAULT_LAT = 35.6825;
 export const DEFAULT_LNG = 139.7521;
 const MAX_ADS = 10;
-const ZOOM = 13;
+const MAP_ZOOM = 13;
 
 toggleMapFiltersDisabled(true);
 
-// Создание карты и настройка. Активация страницы при инициализации карты.
 const map = L.map('map-canvas');
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -44,14 +43,11 @@ const mainPin = L.marker(
 );
 mainPin.addTo(map);
 
-
-// Ввод значения поля address в форму
 mainPin.on('moveend', (evt) => {
   const { lat, lng } = evt.target.getLatLng();
   setAdress(lat, lng);
 });
 
-// Создание группы меток с балунами. Отображение их на карте
 const markerGroup = L.layerGroup().addTo(map);
 
 export const clearMarkers = () => {
@@ -72,7 +68,6 @@ export const renderPins = (data) => {
   });
 };
 
-// Функция сброса карты к настройкам по-умолчанию
 export const resetMap = () => {
   map
     .setView(
@@ -80,7 +75,7 @@ export const resetMap = () => {
         lat: DEFAULT_LAT,
         lng: DEFAULT_LNG,
       },
-      ZOOM
+      MAP_ZOOM
     )
     .closePopup();
   mainPin.setLatLng({
@@ -99,7 +94,7 @@ const onGetDataSuccess = (data) => {
 };
 
 map.on('load', () => {
-  getData(onGetDataSuccess, showAlert);
+  getData(onGetDataSuccess, onGetDataShowError);
   setAdress(DEFAULT_LAT, DEFAULT_LNG);
   toggleAdFormDisabled(false);
 })
@@ -108,5 +103,5 @@ map.on('load', () => {
       lat: DEFAULT_LAT,
       lng: DEFAULT_LNG,
     },
-    ZOOM
+    MAP_ZOOM
   );
