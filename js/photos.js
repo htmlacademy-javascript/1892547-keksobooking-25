@@ -13,9 +13,9 @@ avatarFileChooser.addEventListener('change', () => {
   const file = avatarFileChooser.files[0];
   const fileName = file.name.toLowerCase();
 
-  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+  const isMatch = FILE_TYPES.some((it) => fileName.endsWith(it));
 
-  if (matches) {
+  if (isMatch) {
     avatarPreview.src = URL.createObjectURL(file);
   }
 });
@@ -24,9 +24,9 @@ imageFileChooser.addEventListener('change', () => {
   const file = imageFileChooser.files[0];
   const fileName = file.name.toLowerCase();
 
-  const matches = FILE_TYPES.some((type) => fileName.endsWith(type));
+  const isMatch = FILE_TYPES.some((type) => fileName.endsWith(type));
 
-  if (matches) {
+  if (isMatch) {
     const newImage = document.createElement('img');
     newImage.src = URL.createObjectURL(file);
     newImage.width = '40';
@@ -46,6 +46,8 @@ imageFileChooser.addEventListener('change', () => {
 export const clearImages = () => {
   const photos = document.querySelectorAll('.ad-form__photo');
   avatarPreview.src = DEFAULT_AVATAR_SRC;
-
-  photos.forEach((photo, index) => index === 0 ? photo.firstChild.remove() : photo.remove());
+  const image = form.querySelector('.ad-form__photo img');
+  if (image) {
+    photos.forEach((photo, index) => index === 0 ? photo.firstChild.remove() : photo.remove());
+  }
 };
