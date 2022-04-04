@@ -46,8 +46,8 @@ imageFileChooser.addEventListener('change', () => {
 export const clearImages = () => {
   const photos = document.querySelectorAll('.ad-form__photo');
   avatarPreview.src = DEFAULT_AVATAR_SRC;
-  const image = form.querySelector('.ad-form__photo img');
-  if (image) {
+
+  if (photoContainer.querySelector('img')) {
     photos.forEach((photo, index) => index === 0 ? photo.firstChild.remove() : photo.remove());
   }
 };

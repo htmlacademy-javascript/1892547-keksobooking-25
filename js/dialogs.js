@@ -5,7 +5,7 @@ export const successTemplate = document.querySelector('#success').content;
 export const errorTemplate = document.querySelector('#error').content;
 const alertTemplate = document.querySelector('#data-error').content;
 
-export const showAlert = () => {
+export const onGetDataShowError = () => {
   const alertContainer = alertTemplate.cloneNode(true);
   const errorMessage = alertContainer.querySelector('.data-error');
   document.body.append(errorMessage);
