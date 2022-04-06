@@ -4,11 +4,9 @@ const LOAD_URL = 'https://25.javascript.pages.academy/keksobooking/data';
 export const getData = (onSuccess, onError) => {
   fetch(LOAD_URL)
     .then((response) => {
-
       if (response.ok) {
         return response.json();
       }
-
       onError();
     })
     .then((data) => onSuccess(data))
@@ -21,13 +19,11 @@ export const sendData = (onSuccess, onError, body) => {
     body,
   })
     .then((response) => {
-
       if (response.ok) {
         onSuccess();
       } else {
         onError();
       }
     })
-
     .catch(onError);
 };

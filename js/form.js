@@ -12,7 +12,6 @@ const SLIDER_RANGE = {
 };
 
 const form = document.querySelector('.ad-form');
-export const mapFilters = document.querySelector('.map__filters');
 const address = document.querySelector('#address');
 const roomsField = form.querySelector('#room_number');
 const capacityField = form.querySelector('#capacity');
@@ -79,10 +78,10 @@ noUiSlider.create(slider, {
   step: SLIDER_STEP,
   connect: 'lower',
   format: {
-    to: function (value) {
+    to(value) {
       return value.toFixed(0);
     },
-    from: function (value) {
+    from(value) {
       return value;
     },
   },
@@ -90,6 +89,7 @@ noUiSlider.create(slider, {
 
 const validatePrice = (value) =>
   value >= minPrice[typeField.value] && value <= MAX_PRICE;
+
 const getPriceErrorMessage = () =>
   priceField.value > MAX_PRICE
     ? `Максимальная цена: ${MAX_PRICE}`
@@ -137,11 +137,7 @@ export const toggleAdFormDisabled = (isDisabled) => {
   form.classList.toggle('ad-form--disabled', isDisabled);
 };
 
-export const toggleMapFiltersDisabled = (isDisabled) => {
-  mapFilters.classList.toggle('map__filters--disabled', isDisabled);
-};
-
-export const setAdress = (lat, lng) => {
+export const setAddress = (lat, lng) => {
   address.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 };
 
@@ -160,7 +156,7 @@ const resetForm = () => {
   clearImages();
   slider.noUiSlider.set(priceField.value);
   priceField.placeholder = minPrice[typeField.value];
-  setAdress(DEFAULT_LAT, DEFAULT_LNG);
+  setAddress(DEFAULT_LAT, DEFAULT_LNG);
   resetMap();
 };
 
