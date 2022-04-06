@@ -29,8 +29,8 @@ imageFileChooser.addEventListener('change', () => {
   if (isMatch) {
     const newImage = document.createElement('img');
     newImage.src = URL.createObjectURL(file);
-    newImage.width = '40';
-    newImage.height = '44';
+    newImage.width = 40;
+    newImage.height = 44;
 
     if (photoContainer.querySelector('img')) {
       const newPreviewContainer = document.createElement('div');

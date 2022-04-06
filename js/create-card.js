@@ -29,11 +29,12 @@ const createPhotos = (photos) => {
     const image = document.createElement('img');
     image.className = 'popup__photo';
     image.src = src;
-    image.width = '45';
-    image.height = '40';
+    image.width = 45;
+    image.height = 40;
     image.alt = 'Фотография жилья';
     photosFragment.append(image);
   }
+
   return photosFragment;
 };
 
@@ -41,8 +42,8 @@ export const createCard = ({ offer, author }) => {
   const offerCard = offerCardTemplate.cloneNode(true);
   const popupTitle = offerCard.querySelector('.popup__title');
   popupTitle.textContent = offer.title;
-  const popupAdress = offerCard.querySelector('.popup__text--address');
-  popupAdress.textContent = offer.address;
+  const popupAddress = offerCard.querySelector('.popup__text--address');
+  popupAddress.textContent = offer.address;
   const popupPrice = offerCard.querySelector('.popup__text--price');
   popupPrice.textContent = `${offer.price} ₽/ночь`;
   const popupType = offerCard.querySelector('.popup__type');

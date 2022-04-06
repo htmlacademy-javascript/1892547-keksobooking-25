@@ -1,16 +1,14 @@
 import { createCard } from './create-card.js';
-import { toggleAdFormDisabled, toggleMapFiltersDisabled, setAdress, mapFilters} from './form.js';
-import { filterData } from './filters.js';
+import { toggleAdFormDisabled, setAddress} from './form.js';
+import { filterData, toggleMapFiltersDisabled, mapFilters } from './filters.js';
 import { getData } from './api.js';
-import { getAds, setAds } from './get-ads.js';
+import { getAds, setAds } from './ad-data.js';
 import { onGetDataShowError } from './dialogs.js';
 
 export const DEFAULT_LAT = 35.6825;
 export const DEFAULT_LNG = 139.7521;
 const MAX_ADS = 10;
 const MAP_ZOOM = 13;
-
-toggleMapFiltersDisabled(true);
 
 const map = L.map('map-canvas');
 
@@ -45,7 +43,7 @@ mainPin.addTo(map);
 
 mainPin.on('moveend', (evt) => {
   const { lat, lng } = evt.target.getLatLng();
-  setAdress(lat, lng);
+  setAddress(lat, lng);
 });
 
 const markerGroup = L.layerGroup().addTo(map);
@@ -62,6 +60,7 @@ const createMarker = (card) =>
 
 export const renderPins = (data) => {
   const pins = filterData(data).slice(0, MAX_ADS);
+
   pins.forEach((element) => {
     const adPin = createMarker(element);
     adPin.addTo(markerGroup).bindPopup(createCard(element));
@@ -95,7 +94,7 @@ const onGetDataSuccess = (data) => {
 
 map.on('load', () => {
   getData(onGetDataSuccess, onGetDataShowError);
-  setAdress(DEFAULT_LAT, DEFAULT_LNG);
+  setAddress(DEFAULT_LAT, DEFAULT_LNG);
   toggleAdFormDisabled(false);
 })
   .setView(

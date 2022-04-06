@@ -20,20 +20,19 @@ export const showMessage = (template) => {
   const message = fragment.querySelector('div');
   document.body.append(message);
 
-  const removeMessage = (cb) => {
+  function removeMessage (cb) {
     message.remove();
     document.removeEventListener('keydown', cb);
-  };
+  }
 
-  const onDocumentKeyDown = (evt) => {
+  function onDocumentKeyDown (evt) {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       removeMessage(onDocumentKeyDown);
     }
-  };
+  }
 
   document.addEventListener('keydown', onDocumentKeyDown);
-
   message.addEventListener('click', () => {
     removeMessage(onDocumentKeyDown);
   });
